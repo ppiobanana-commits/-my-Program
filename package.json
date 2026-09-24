@@ -1,0 +1,21 @@
+{
+  "name": "my-program-travel",
+  "version": "1.0.0",
+  "description": "MY PROGRAM Travel Platform & AI Deep Booking Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "travel",
+    "booking",
+    "ai",
+    "gemini"
+  ],
+  "author": "Watcharatep",
+  "license": "ISC"
+}
+

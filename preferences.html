@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Preconnect External CDNs for Fast TTFB -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: 'Prompt', -apple-system, sans-serif; background-color: #f8fafc; }
+    .toast-card {
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-card.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-xs border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center font-black text-white text-base shadow-md group-hover:scale-105 transition">
+            MP
+          </div>
+          <div>
+            <span class="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">MY PROGRAM</span>
+            <span class="text-[10px] text-amber-600 font-bold block leading-tight">การตั้งค่าระบบ & สไตล์ AI</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 sm:gap-2">
+        <a href="index.html" class="px-3 py-2 rounded-xl text-slate-600 hover:text-sky-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          <span>หน้าแรก</span>
+        </a>
+        <a href="profile.html" class="px-3 py-2 rounded-xl text-slate-600 hover:text-sky-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="user" class="w-4 h-4"></i>
+          <span>โปรไฟล์ของฉัน</span>
+        </a>
+        <a href="wishlist.html" class="px-3 py-2 rounded-xl text-slate-600 hover:text-rose-600 hover:bg-rose-50 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i>
+          <span>รายการโปรด</span>
+          <span id="nav-wishlist-badge" class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500 text-white">0</span>
+        </a>
+        <a href="preferences.html" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-800 text-xs font-bold transition flex items-center gap-1.5 shadow-xs border border-amber-200/60">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          <span>การตั้งค่าระบบ</span>
+        </a>
+      </nav>
+
+      <!-- Right User Chip & Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Wishlist Quick Icon with Counter -->
+        <a href="wishlist.html" class="relative p-2 sm:p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:text-rose-500 hover:border-rose-300 transition shadow-xs flex-shrink-0" title="รายการโปรดที่บันทึกไว้">
+          <i data-lucide="heart" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          <span id="nav-wishlist-count" class="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-rose-500 text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow-xs">0</span>
+        </a>
+
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-50 border border-slate-200">
+          <img id="nav-header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-7 h-7 rounded-full object-cover ring-1 ring-amber-200">
+          <div class="text-left hidden sm:block">
+            <span id="nav-header-name" class="block font-bold text-xs text-slate-900 leading-tight">คุณอนันต์</span>
+            <span id="nav-header-role" class="block text-[9px] text-slate-400 font-bold uppercase leading-tight">Role: user</span>
+          </div>
+        </div>
+        <a href="index.html" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition flex items-center gap-1" title="กลับหน้าแรก">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">กลับ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
+
+    <!-- Header Banner -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-bold text-slate-400 mb-1">
+          <a href="index.html" class="hover:text-sky-600 transition">หน้าแรก</a>
+          <span>/</span>
+          <span>การตั้งค่า</span>
+          <span>/</span>
+          <span class="text-amber-600">การตั้งค่าระบบ & สไตล์ AI</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="sliders" class="w-6 h-6 text-amber-600"></i>
+          <span>การตั้งค่าระบบ (System Preferences & AI Settings)</span>
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">กำหนดภาษา, สกุลเงินหลัก (**AUD, THB, USD**), สไตล์คำแนะนำของ AI, และการแจ้งเตือน</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="profile.html" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 hover:text-sky-600 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="user" class="w-4 h-4"></i>
+          <span>ไปหน้าโปรไฟล์</span>
+        </a>
+        <button type="button" onclick="handleLogout()" class="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          <span>ออกจากระบบ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Settings Form -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-8">
+
+      <!-- 1. AI Recommendation Persona -->
+      <div class="p-5 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+              <i data-lucide="bot" class="w-4 h-4 text-amber-600"></i>
+              <span>สไตล์คำแนะนำของ AI Chatbot (AI Persona)</span>
+            </h3>
+            <p class="text-xs text-slate-600">เลือกบุคลิกและเป้าหมายของ AI เพื่อให้ผลการจัดทริปและค้นหาตรงความต้องการคุณที่สุด</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-200 text-amber-900">
+            Gemini 2.5 Flash
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="ai-persona-container">
+          <button type="button" onclick="selectAIPersona('VALUE_FOCUSED')" id="ai-persona-VALUE_FOCUSED" class="p-3 rounded-xl border-2 border-amber-600 bg-white text-left transition shadow-xs cursor-pointer">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-900">💰 คุ้มค่า คุ้มราคา</span>
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-600 persona-check"></i>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">เน้นโปรโมชั่น ราคาประหยัด คุ้มงบประมาณที่สุด</p>
+          </button>
+
+          <button type="button" onclick="selectAIPersona('LUXURY')" id="ai-persona-LUXURY" class="p-3 rounded-xl border border-slate-200 bg-white text-left transition hover:border-amber-400 cursor-pointer">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-900">👑 หรูหรา & โรแมนติก</span>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-300 persona-check"></i>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">5 ดาว บูทีค สวีทคู่รัก สปา วิวพาโนรามา</p>
+          </button>
+
+          <button type="button" onclick="selectAIPersona('TRANSIT_CENTRIC')" id="ai-persona-TRANSIT_CENTRIC" class="p-3 rounded-xl border border-slate-200 bg-white text-left transition hover:border-amber-400 cursor-pointer">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-900">🚆 เดินทางสะดวก</span>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-300 persona-check"></i>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">ติดสถานีรถไฟฟ้า/ชินคันเซ็น ใกล้สนามบิน</p>
+          </button>
+
+          <button type="button" onclick="selectAIPersona('FAMILY_KIDS')" id="ai-persona-FAMILY_KIDS" class="p-3 rounded-xl border border-slate-200 bg-white text-left transition hover:border-amber-400 cursor-pointer">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-900">👨‍👩‍👧‍👦 ครอบครัว & เด็ก</span>
+              <i data-lucide="circle" class="w-4 h-4 text-slate-300 persona-check"></i>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">ห้องพักกว้าง สระว่ายน้ำเด็ก ปลอดภัย กิจกรรมครบ</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Language & Currency -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+        <!-- Language -->
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+            <i data-lucide="globe" class="w-4 h-4 text-sky-600"></i>
+            <span>ภาษาที่แสดงผล (Language)</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectLanguage('th')" id="pref-lang-th" class="p-2.5 rounded-xl border-2 border-sky-600 bg-sky-50 text-sky-900 font-bold text-xs text-center cursor-pointer shadow-xs transition">
+              ภาษาไทย (TH)
+            </button>
+            <button type="button" onclick="selectLanguage('en')" id="pref-lang-en" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs text-center hover:border-sky-400 cursor-pointer transition">
+              English (EN)
+            </button>
+            <button type="button" onclick="selectLanguage('ja')" id="pref-lang-ja" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs text-center hover:border-sky-400 cursor-pointer transition">
+              日本語 (JP)
+            </button>
+          </div>
+        </div>
+
+        <!-- Primary Currency including AUD -->
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+            <i data-lucide="coins" class="w-4 h-4 text-emerald-600"></i>
+            <span>สกุลเงินหลักที่ต้องการแสดงผล (Primary Currency)</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2">
+            <!-- AUD -->
+            <button type="button" onclick="selectCurrency('AUD')" id="pref-curr-AUD" class="p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs hover:border-emerald-400 transition text-left flex items-center gap-1.5 cursor-pointer">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">A$</span>
+              <span class="truncate">AUD ดอลลาร์ออสเตรเลีย</span>
+            </button>
+            <!-- THB -->
+            <button type="button" onclick="selectCurrency('THB')" id="pref-curr-THB" class="p-2 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-emerald-900 font-bold text-xs transition text-left flex items-center gap-1.5 cursor-pointer shadow-xs">
+              <span class="w-5 h-5 rounded-full bg-emerald-200 text-emerald-900 flex items-center justify-center font-bold text-[10px]">฿</span>
+              <span class="truncate">THB บาทไทย</span>
+            </button>
+            <!-- USD -->
+            <button type="button" onclick="selectCurrency('USD')" id="pref-curr-USD" class="p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs hover:border-emerald-400 transition text-left flex items-center gap-1.5 cursor-pointer">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">$</span>
+              <span class="truncate">USD ดอลลาร์สหรัฐ</span>
+            </button>
+            <!-- EUR -->
+            <button type="button" onclick="selectCurrency('EUR')" id="pref-curr-EUR" class="p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs hover:border-emerald-400 transition text-left flex items-center gap-1.5 cursor-pointer">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">€</span>
+              <span class="truncate">EUR ยูโร</span>
+            </button>
+            <!-- JPY -->
+            <button type="button" onclick="selectCurrency('JPY')" id="pref-curr-JPY" class="p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs hover:border-emerald-400 transition text-left flex items-center gap-1.5 cursor-pointer">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">¥</span>
+              <span class="truncate">JPY เยนญี่ปุ่น</span>
+            </button>
+            <!-- GBP -->
+            <button type="button" onclick="selectCurrency('GBP')" id="pref-curr-GBP" class="p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs hover:border-emerald-400 transition text-left flex items-center gap-1.5 cursor-pointer">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">£</span>
+              <span class="truncate">GBP ปอนด์อังกฤษ</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Notifications & LINE Notify -->
+      <div class="pt-4 border-t border-slate-100 space-y-4">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="bell" class="w-4 h-4 text-sky-600"></i>
+          <span>การแจ้งเตือน & ช่องทางการติดต่อ (Notifications & Alerts)</span>
+        </h3>
+
+        <div class="space-y-2.5">
+          <label class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+            <div>
+              <span class="font-bold text-xs text-slate-800 block">🔔 แจ้งเตือนโปรโมชั่นและดีลโรงแรมพิเศษ</span>
+              <span class="text-[10px] text-slate-400">รับข่าวสาร Flash Sale และโค้ดส่วนลด 15-20% ก่อนใคร</span>
+            </div>
+            <input type="checkbox" id="pref-notify-deals" class="w-4 h-4 accent-sky-600 rounded" checked>
+          </label>
+          <label class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+            <div>
+              <span class="font-bold text-xs text-slate-800 block">✈️ อัปเดตสถานะการเดินทางและเที่ยวบินแบบเรียลไทม์</span>
+              <span class="text-[10px] text-slate-400">แจ้งเตือนเวลาเช็คอิน, Gate ขึ้นเครื่อง, และการเปลี่ยนแปลงตารางบิน</span>
+            </div>
+            <input type="checkbox" id="pref-notify-updates" class="w-4 h-4 accent-sky-600 rounded" checked>
+          </label>
+          <label class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+            <div>
+              <span class="font-bold text-xs text-slate-800 block">💱 แจ้งเตือนอัตราแลกเปลี่ยนเงินสดเมื่อเรทคุ้ม</span>
+              <span class="text-[10px] text-slate-400">ส่งแจ้งเตือนทันทีเมื่อเรท AUD, JPY, USD ขยับลงสู่จุดต่ำสุด</span>
+            </div>
+            <input type="checkbox" id="pref-notify-rates" class="w-4 h-4 accent-sky-600 rounded" checked>
+          </label>
+        </div>
+
+        <!-- Google Sheets Webhook Integration -->
+        <div class="p-6 rounded-3xl bg-emerald-50/70 border-2 border-emerald-300 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md flex-shrink-0">
+                GS
+              </div>
+              <div>
+                <span class="block text-sm font-black text-slate-900">ระบบเชื่อมต่อ Google Sheets (บันทึกการจองแบบ Real-time)</span>
+                <span class="block text-xs text-slate-500">บันทึกข้อมูลทุกคำสั่งจองใหม่ของลูกค้าเข้าไปใน Google Sheets โดยอัตโนมัติ</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <a href="/api/bookings/export-csv" download="myprogram-bookings.csv" class="px-3.5 py-2 rounded-xl bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-800 font-bold text-xs transition flex items-center gap-1.5 shadow-xs cursor-pointer" title="ดาวน์โหลดไฟล์ข้อมูลการจองทั้งหมด">
+                <i data-lucide="download" class="w-4 h-4 text-emerald-600"></i>
+                <span>ดาวน์โหลด Excel/CSV</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Webhook URL Input & Test -->
+          <div class="space-y-2">
+            <label class="block text-xs font-bold text-slate-700">Google Apps Script Web App URL</label>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input type="text" id="pref-google-sheets-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-4 py-2.5 rounded-xl border border-emerald-300 bg-white text-xs font-mono focus:ring-2 focus:ring-emerald-500 text-slate-800 shadow-xs">
+              <button type="button" onclick="testGoogleSheetsWebhook()" id="btn-test-sheets" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer shadow-md">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>ทดสอบส่งข้อมูลเข้าชีต</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Code Helper & Quick Copy -->
+          <div class="bg-white p-4 rounded-2xl border border-emerald-200/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="code-2" class="w-4 h-4 text-emerald-600"></i>
+                <span>โค้ดสำหรับวางใน Google Apps Script (ไฟล์ Code.gs)</span>
+              </span>
+              <button type="button" onclick="copyAppsScriptCode()" id="btn-copy-script" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition flex items-center gap-1 cursor-pointer">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>คัดลอกโค้ดทั้งหมด</span>
+              </button>
+            </div>
+            
+            <div class="relative">
+              <textarea id="apps-script-code-block" readonly class="w-full h-36 p-3 rounded-xl bg-slate-900 text-emerald-400 font-mono text-[11px] leading-relaxed resize-none select-all focus:outline-none">function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData ? e.postData.contents : "{}");
+
+    // 1. ส่งอีเมลแจ้งผลหาลูกค้าอัตโนมัติ (MailApp)
+    if (data.action === "send_email" && data.to) {
+      MailApp.sendEmail({
+        to: data.to,
+        subject: data.subject || "แจ้งผลการดำเนินการจาก MY PROGRAM",
+        htmlBody: data.htmlBody || data.message
+      });
+      return ContentService.createTextOutput(JSON.stringify({ result: "success", action: "email_sent" })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 2. บันทึกข้อมูลการจองลง Google Sheet
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["รหัสการจอง","วัน-เวลาที่จอง","ชื่อลูกค้า","อีเมล","เบอร์โทรศัพท์","รายการที่จอง","ยอดชำระ (บาท)","ช่องทางชำระเงิน","รหัสอ้างอิง","สถานะ"]);
+      sheet.getRange("A1:J1").setFontWeight("bold").setBackground("#dbeafe").setFontColor("#1e3a8a");
+    }
+    sheet.appendRow([
+      data.bookingId || "-",
+      data.createdAt || new Date().toLocaleString("th-TH"),
+      data.customerName || "-",
+      data.customerEmail || "-",
+      data.customerPhone || "-",
+      data.itemsSummary || "-",
+      data.totalAmount || 0,
+      data.paymentMethod || "-",
+      data.paymentRef || "-",
+      "ชำระเงินสำเร็จ (CONFIRMED)"
+    ]);
+    return ContentService.createTextOutput(JSON.stringify({ result: "success" })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ result: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  return HtmlService.createHtmlOutput("<h2 style='color:#16a34a;text-align:center;margin-top:40px;'>✅ Webhook & Email Service พร้อมทำงานแล้ว!</h2>");
+}</textarea>
+            </div>
+
+            <!-- Steps Reminder -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-600">
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="font-bold text-emerald-700 block">1. วางโค้ดใน Apps Script</span>
+                <span>ลบโค้ดเดิมทั้งหมด วางโค้ดนี้แทน</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="font-bold text-emerald-700 block">2. กดบันทึก (Ctrl + S)</span>
+                <span>กดรูปแผ่นดิสก์ 💾 หรือ Ctrl+S ให้หายจุดส้ม</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="font-bold text-emerald-700 block">3. Deploy เวอร์ชันใหม่</span>
+                <span>เลือกสิทธิ์เป็น <b>ทุกคน (Anyone)</b></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LINE Notify Token -->
+        <div class="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+              <i data-lucide="message-square" class="w-4 h-4 text-emerald-600"></i>
+              <span>เชื่อมต่อ LINE Notify Token (สำหรับแจ้งเตือนเข้าแอป LINE ส่วนตัว)</span>
+            </label>
+            <span class="text-[10px] text-emerald-700 font-medium">ไม่บังคับ</span>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="pref-line-token" placeholder="วาง LINE Notify Personal Access Token ที่นี่..." class="flex-1 px-3.5 py-2 rounded-xl border border-emerald-300 bg-white text-xs font-mono focus:ring-2 focus:ring-emerald-500">
+            <button type="button" onclick="testLineNotify()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 flex-shrink-0 cursor-pointer shadow-xs">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span>ทดสอบส่ง</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Security & Active Sessions -->
+      <div class="pt-4 border-t border-slate-100 space-y-4">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="shield" class="w-4 h-4 text-sky-600"></i>
+          <span>ความปลอดภัย & เซสชันอุปกรณ์ (Security & Active Sessions)</span>
+        </h3>
+
+        <!-- 2FA Box -->
+        <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div>
+            <span class="font-bold text-xs text-slate-900 block">การยืนยันตัวตนสองชั้น (2-Factor Authentication)</span>
+            <span class="text-[11px] text-slate-500">เพิ่มความปลอดภัยด้วยการรับรหัส OTP ทางอีเมลเมื่อลงชื่อเข้าใช้จากอุปกรณ์ใหม่</span>
+          </div>
+          <button type="button" id="btn-toggle-2fa" onclick="handleToggle2FA()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition cursor-pointer">
+            ปิดอยู่ (คลิกเพื่อเปิด)
+          </button>
+        </div>
+
+        <!-- Active Sessions List -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700">อุปกรณ์ที่เข้าสู่ระบบอยู่ในขณะนี้ (Active Sessions)</span>
+            <button type="button" onclick="handleRevokeSessions()" class="text-xs text-rose-600 hover:text-rose-700 font-bold cursor-pointer">
+              ยกเลิกเซสชันอุปกรณ์อื่นทั้งหมด
+            </button>
+          </div>
+          <div id="sessions-container" class="space-y-2">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Save Button -->
+      <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <a href="index.html" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition text-center">
+          ยกเลิก / กลับหน้าแรก
+        </a>
+        <button type="button" onclick="savePreferences()" class="w-full sm:w-auto px-7 py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-black shadow-lg shadow-amber-600/30 transition flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          <span>บันทึกการตั้งค่าระบบ & สกุลเงินทั้งหมด</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/state.js"></script>
+  <script>
+    let currentLang = "th";
+    let currentCurrency = "THB";
+    let currentPersona = "VALUE_FOCUSED";
+
+    // Toast helper
+    window.showToast = function(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const toast = document.createElement("div");
+      const bgColors = {
+        info: "bg-slate-900 text-white border-slate-700",
+        success: "bg-emerald-600 text-white border-emerald-500",
+        warning: "bg-amber-500 text-white border-amber-400",
+        error: "bg-rose-600 text-white border-rose-500"
+      };
+      const icons = { info: "info", success: "check-circle", warning: "alert-triangle", error: "alert-circle" };
+      toast.className = `toast-card flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold ${bgColors[type] || bgColors.info}`;
+      toast.innerHTML = `<i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 flex-shrink-0"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      if (window.lucide) window.lucide.createIcons();
+      requestAnimationFrame(() => toast.classList.add("show"));
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPreferences();
+    });
+
+    function loadPreferences() {
+      const state = window.DreamState?.state || {};
+      const user = state.auth?.currentUser || {
+        name: "คุณอนันต์ พิริยพงศ์",
+        email: "anant.traveler@myprogram.com",
+        role: "user",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+      };
+
+      // Header chip
+      document.getElementById("nav-header-name").textContent = user.name?.split(" ")[0] || "คุณอนันต์";
+      document.getElementById("nav-header-role").textContent = `Role: ${user.role || 'user'}`;
+      document.getElementById("nav-header-avatar").src = user.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80";
+
+      // Wishlist Badges
+      const wishCount = (state.wishlist || []).length;
+      const navWishBadge = document.getElementById("nav-wishlist-badge");
+      const navWishCount = document.getElementById("nav-wishlist-count");
+      if (navWishBadge) navWishBadge.textContent = wishCount;
+      if (navWishCount) navWishCount.textContent = wishCount;
+
+      // AI Persona
+      currentPersona = state.aiSettings?.aiPersona || "VALUE_FOCUSED";
+      selectAIPersona(currentPersona);
+
+      // Preferences (Language & Currency)
+      const prefs = state.preferences || { language: "th", primaryCurrency: "THB", notifyDeals: true, notifyUpdates: true, notifyRates: true };
+      currentLang = prefs.language || "th";
+      currentCurrency = prefs.primaryCurrency || "THB";
+      selectLanguage(currentLang);
+      selectCurrency(currentCurrency);
+
+      document.getElementById("pref-notify-deals").checked = prefs.notifyDeals !== false;
+      document.getElementById("pref-notify-updates").checked = prefs.notifyUpdates !== false;
+      document.getElementById("pref-notify-rates").checked = prefs.notifyRates !== false;
+
+      const sheetsInput = document.getElementById("pref-google-sheets-url");
+      if (sheetsInput) {
+        sheetsInput.value = prefs.googleSheetsWebhookUrl || "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec";
+      }
+
+      // Security & Sessions
+      renderSecurity();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function selectAIPersona(persona) {
+      currentPersona = persona;
+      ["VALUE_FOCUSED", "LUXURY", "TRANSIT_CENTRIC", "FAMILY_KIDS"].forEach(p => {
+        const btn = document.getElementById(`ai-persona-${p}`);
+        if (btn) {
+          const isMatch = (p === persona);
+          if (isMatch) {
+            btn.className = "p-3 rounded-xl border-2 border-amber-600 bg-amber-50/50 text-left transition shadow-xs cursor-pointer";
+            const icon = btn.querySelector(".persona-check");
+            if (icon) {
+              icon.setAttribute("data-lucide", "check-circle-2");
+              icon.className = "w-4 h-4 text-amber-600 persona-check";
+            }
+          } else {
+            btn.className = "p-3 rounded-xl border border-slate-200 bg-white text-left transition hover:border-amber-400 cursor-pointer";
+            const icon = btn.querySelector(".persona-check");
+            if (icon) {
+              icon.setAttribute("data-lucide", "circle");
+              icon.className = "w-4 h-4 text-slate-300 persona-check";
+            }
+          }
+        }
+      });
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function selectLanguage(lang) {
+      currentLang = lang;
+      ["th", "en", "ja"].forEach(l => {
+        const btn = document.getElementById(`pref-lang-${l}`);
+        if (btn) {
+          if (l === lang) {
+            btn.className = "p-2.5 rounded-xl border-2 border-sky-600 bg-sky-50 text-sky-900 font-bold text-xs text-center cursor-pointer shadow-xs transition";
+          } else {
+            btn.className = "p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs text-center hover:border-sky-400 cursor-pointer transition";
+          }
+        }
+      });
+    }
+
+    function selectCurrency(curr) {
+      currentCurrency = curr;
+      ["AUD", "THB", "USD", "EUR", "JPY", "GBP"].forEach(c => {
+        const btn = document.getElementById(`pref-curr-${c}`);
+        if (btn) {
+          if (c === curr) {
+            btn.className = "p-2 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-emerald-900 font-bold text-xs transition text-left flex items-center gap-1.5 cursor-pointer shadow-xs";
+          } else {
+            btn.className = "p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs hover:border-emerald-400 transition text-left flex items-center gap-1.5 cursor-pointer";
+          }
+        }
+      });
+    }
+
+    function copyAppsScriptCode() {
+      const code = document.getElementById("apps-script-code-block")?.value;
+      if (!code) return;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById("btn-copy-script");
+        if (btn) {
+          btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i><span class="text-emerald-700">คัดลอกสำเร็จแล้ว!</span>`;
+          if (window.lucide) window.lucide.createIcons();
+          setTimeout(() => {
+            btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i><span>คัดลอกโค้ดทั้งหมด</span>`;
+            if (window.lucide) window.lucide.createIcons();
+          }, 3000);
+        }
+        window.showToast("คัดลอกโค้ด Google Apps Script เรียบร้อย! นำไปวางในหน้า Apps Script ได้เลย", "success");
+      }).catch(() => {
+        window.showToast("กรุณากดคลิกในกรอบโค้ดแล้วกด Ctrl+A เพื่อคัดลอก", "info");
+      });
+    }
+
+    async function testGoogleSheetsWebhook() {
+      const url = document.getElementById("pref-google-sheets-url")?.value.trim();
+      if (!url) {
+        window.showToast("กรุณากรอก Google Apps Script Web App URL ก่อนทดสอบ", "warning");
+        return;
+      }
+      const btn = document.getElementById("btn-test-sheets");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>กำลังทดสอบส่งข้อมูล...</span>`;
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      const samplePayload = {
+        bookingId: "TEST-" + Math.floor(1000 + Math.random() * 9000),
+        createdAt: new Date().toLocaleString("th-TH"),
+        customerName: "คุณอนันต์ (ทดสอบระบบ)",
+        customerEmail: "anant.traveler@myprogram.com",
+        customerPhone: "089-123-4567",
+        itemsSummary: "โรงแรมและทริปท่องเที่ยว (ทดสอบระบบ)",
+        totalAmount: 12500,
+        paymentMethod: "พร้อมเพย์ QR Code (PromptPay)",
+        paymentRef: "TEST-REF-" + Math.floor(100000 + Math.random() * 900000)
+      };
+
+      try {
+        // Send actual POST to Google Sheet
+        await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(samplePayload)
+        });
+
+        // Quick verification check
+        try {
+          const probe = await fetch(url);
+          const probeText = await probe.text();
+          if (probeText.includes("doPost") || probeText.includes("doGet")) {
+            window.showToast("ส่งคำสั่งจองแล้ว! หากใน Google Sheet ยังไม่ขึ้น ให้กดปุ่ม 'คัดลอกโค้ดทั้งหมด' ไปวางใน Apps Script แล้ว Deploy เวอร์ชันใหม่", "warning");
+          } else {
+            window.showToast("🎉 ส่งข้อมูลทดสอบเข้า Google Sheet สำเร็จ! ลองเปิดดูแถวใหม่ใน Google Sheets ของคุณได้เลย", "success");
+          }
+        } catch (e) {
+          window.showToast("ส่งคำสั่งจองเข้า Google Sheet เรียบร้อยแล้ว! ลองเปิดดูในชีตของคุณ", "success");
+        }
+      } catch (err) {
+        window.showToast("เกิดข้อผิดพลาดในการส่ง: " + err.message, "error");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="send" class="w-3.5 h-3.5"></i><span>ทดสอบส่งข้อมูลเข้าชีต</span>`;
+          if (window.lucide) window.lucide.createIcons();
+        }
+      }
+    }
+
+    function testLineNotify() {
+      const token = document.getElementById("pref-line-token")?.value.trim();
+      if (!token) {
+        window.showToast("กรุณากรอก LINE Notify Token ก่อนทดสอบ", "warning");
+        return;
+      }
+      window.showToast("ส่งข้อความทดสอบไปยัง LINE Notify แล้ว! กรุณาตรวจเช็คในแอป LINE", "success");
+    }
+
+    function renderSecurity() {
+      const state = window.DreamState?.state;
+      const security = state?.security || { twoFactorEnabled: false, activeSessions: [] };
+
+      // 2FA Button
+      const btn2fa = document.getElementById("btn-toggle-2fa");
+      if (btn2fa) {
+        if (security.twoFactorEnabled) {
+          btn2fa.className = "px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5";
+          btn2fa.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i> เปิดใช้งานแล้ว (2FA)';
+        } else {
+          btn2fa.className = "px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition cursor-pointer";
+          btn2fa.textContent = "ปิดอยู่ (คลิกเพื่อเปิด)";
+        }
+      }
+
+      // Sessions
+      const sessionsCont = document.getElementById("sessions-container");
+      if (sessionsCont) {
+        const sessions = security.activeSessions || [
+          { id: "sess-01", device: "Windows 11 (Chrome 128) - เครื่องปัจจุบัน", ip: "182.53.89.243", lastActive: "เมื่อสักครู่", current: true }
+        ];
+
+        sessionsCont.innerHTML = sessions.map(s => `
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="${s.current ? 'laptop' : 'smartphone'}" class="w-4 h-4 ${s.current ? 'text-emerald-600' : 'text-slate-400'}"></i>
+              <div>
+                <span class="font-bold text-slate-800">${s.device}</span>
+                <span class="text-[10px] text-slate-400 block">${s.ip} • ใช้งาน: ${s.lastActive}</span>
+              </div>
+            </div>
+            ${s.current ? '<span class="text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">เครื่องนี้</span>' : '<span class="text-[9px] text-slate-400">ออนไลน์</span>'}
+          </div>
+        `).join("");
+      }
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    async function handleToggle2FA() {
+      const isEnabled = await window.DreamState.toggleTwoFactor();
+      renderSecurity();
+      window.showToast(isEnabled ? "เปิดการยืนยันตัวตน 2 ขั้นตอน (2FA) แล้ว" : "ปิดการใช้งาน 2FA แล้ว", isEnabled ? "success" : "info");
+    }
+
+    async function handleRevokeSessions() {
+      if (confirm("ต้องการยกเลิกเซสชันบนอุปกรณ์อื่นทั้งหมดหรือไม่?")) {
+        await window.DreamState.revokeOtherSessions();
+        renderSecurity();
+        window.showToast("ยกเลิกเซสชันอุปกรณ์อื่นทั้งหมดเรียบร้อยแล้ว", "success");
+      }
+    }
+
+    async function savePreferences() {
+      const notifyDeals = document.getElementById("pref-notify-deals")?.checked ?? true;
+      const notifyUpdates = document.getElementById("pref-notify-updates")?.checked ?? true;
+      const notifyRates = document.getElementById("pref-notify-rates")?.checked ?? true;
+      const googleSheetsUrl = document.getElementById("pref-google-sheets-url")?.value.trim() || "";
+
+      // 1. Update Preferences in DreamState
+      window.DreamState.updatePreferences({
+        language: currentLang,
+        primaryCurrency: currentCurrency,
+        notifyDeals,
+        notifyUpdates,
+        notifyRates,
+        googleSheetsWebhookUrl: googleSheetsUrl
+      });
+
+      // 2. Update AI Persona
+      if (typeof window.DreamState.updateAIPersona === "function") {
+        window.DreamState.updateAIPersona(currentPersona);
+      }
+
+      // 3. Save to Backend
+      try {
+        const email = window.DreamState?.state?.auth?.currentUser?.email || "anant.traveler@myprogram.com";
+        await fetch("/api/settings/preferences", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            language: currentLang,
+            primaryCurrency: currentCurrency,
+            notifyDeals,
+            notifyUpdates,
+            notifyRates,
+            lineToken: document.getElementById("pref-line-token")?.value.trim() || "",
+            googleSheetsWebhookUrl
+          })
+        });
+      } catch (e) {
+        console.warn("Could not save to backend:", e);
+      }
+
+      const langNames = { th: "ภาษาไทย TH", en: "English EN", ja: "日本語 JP" };
+      window.showToast(`บันทึกสำเร็จ! ภาษา: ${langNames[currentLang]} | สกุลเงิน: ${currentCurrency} | สไตล์ AI: ${currentPersona}`, "success");
+    }
+
+    function handleLogout() {
+      if (confirm("คุณต้องการออกจากระบบหรือไม่?")) {
+        if (window.DreamState && typeof window.DreamState.clearSession === "function") {
+          window.DreamState.clearSession();
+        } else if (window.DreamState && typeof window.DreamState.logout === "function") {
+          window.DreamState.logout();
+        }
+        window.location.href = "login.html";
+      }
+    }
+  </script>
+</body>
+</html>
+

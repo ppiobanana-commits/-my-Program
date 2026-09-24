@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายการโปรดของฉัน (My Wishlist) | MY PROGRAM</title>
+
+  <!-- Preconnect External CDNs for High Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body { font-family: 'Prompt', -apple-system, sans-serif; background-color: #f8fafc; }
+    .toast-card {
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-card.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .card-item {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-item:hover {
+      transform: translateY(-4px);
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-xs border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center font-black text-white text-base shadow-md group-hover:scale-105 transition">
+          MP
+        </div>
+        <div>
+          <span class="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">MY PROGRAM</span>
+          <span class="text-[10px] text-rose-500 font-bold block leading-tight flex items-center gap-1">
+            <i data-lucide="heart" class="w-3 h-3 fill-rose-500"></i> รายการโปรดที่บันทึกไว้
+          </span>
+        </div>
+      </a>
+
+      <!-- Center Nav Links -->
+      <nav class="hidden md:flex items-center gap-1 sm:gap-2">
+        <a href="index.html" class="px-3.5 py-2 rounded-xl text-slate-600 hover:text-sky-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          <span>หน้าแรก</span>
+        </a>
+        <a href="profile.html" class="px-3.5 py-2 rounded-xl text-slate-600 hover:text-sky-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="user" class="w-4 h-4"></i>
+          <span>โปรไฟล์ของฉัน</span>
+        </a>
+        <a href="wishlist.html" class="px-3.5 py-2 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold transition flex items-center gap-1.5 shadow-xs border border-rose-200/60">
+          <i data-lucide="heart" class="w-4 h-4 fill-rose-500 text-rose-500"></i>
+          <span>รายการโปรด</span>
+          <span id="nav-wishlist-badge" class="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500 text-white">0</span>
+        </a>
+        <a href="preferences.html" class="px-3.5 py-2 rounded-xl text-slate-600 hover:text-amber-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          <span>การตั้งค่าระบบ</span>
+        </a>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Cart Button -->
+        <a href="index.html#cart" onclick="localStorage.setItem('openCartOnLoad', 'true');" class="relative p-2 sm:p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:text-sky-600 hover:border-sky-300 transition shadow-xs flex-shrink-0 cursor-pointer" title="ตะกร้าการจอง">
+          <i data-lucide="shopping-bag" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          <span id="cart-badge-count" class="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-sky-600 text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow-xs">0</span>
+        </a>
+
+        <!-- User Chip -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-50 border border-slate-200">
+          <img id="nav-header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-7 h-7 rounded-full object-cover ring-1 ring-rose-200">
+          <div class="text-left hidden sm:block">
+            <span id="nav-header-name" class="block font-bold text-xs text-slate-900 leading-tight">คุณอนันต์</span>
+            <span id="nav-header-role" class="block text-[9px] text-slate-400 font-bold uppercase leading-tight">Role: user</span>
+          </div>
+        </div>
+
+        <a href="index.html" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition flex items-center gap-1" title="กลับหน้าแรก">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">กลับ</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
+
+    <!-- Header Banner -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xs">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-bold text-slate-400 mb-1">
+          <a href="index.html" class="hover:text-sky-600 transition">หน้าแรก</a>
+          <span>/</span>
+          <span class="text-rose-600">รายการโปรดที่บันทึกไว้</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center">
+            <i data-lucide="heart" class="w-5 h-5 fill-rose-500 text-rose-500"></i>
+          </span>
+          <span>รายการโปรดของฉัน (My Saved Wishlist)</span>
+          <span id="total-wishlist-counter" class="ml-2 px-3 py-1 rounded-full text-xs font-extrabold bg-rose-100 text-rose-700">
+            0 รายการ
+          </span>
+        </h1>
+        <p class="text-xs text-slate-500 mt-1.5">
+          รวมสถานที่ท่องเที่ยว, โรงแรม, ร้านอาหาร และบริการเดินทางที่คุณกดถูกใจไว้ เพื่อวางแผนทริปและจองได้สะดวกรวดเร็ว
+        </p>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <a href="index.html#attractions" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-md shadow-sky-600/20 transition flex items-center gap-1.5">
+          <i data-lucide="compass" class="w-4 h-4"></i>
+          <span>สำรวจสถานที่เที่ยวเพิ่ม</span>
+        </a>
+        <button type="button" onclick="clearAllWishlist()" id="btn-clear-all" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="trash-2" class="w-4 h-4"></i>
+          <span>ล้างทั้งหมด</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <button type="button" onclick="setCategoryFilter('all')" id="tab-cat-all" class="cat-pill px-4 py-2 rounded-2xl font-bold text-xs transition bg-slate-900 text-white shadow-xs whitespace-nowrap">
+        ทั้งหมด (<span id="count-cat-all">0</span>)
+      </button>
+      <button type="button" onclick="setCategoryFilter('attraction')" id="tab-cat-attraction" class="cat-pill px-4 py-2 rounded-2xl font-bold text-xs transition bg-white text-slate-700 border border-slate-200 hover:border-emerald-400 whitespace-nowrap">
+        🏛️ สถานที่ท่องเที่ยว (<span id="count-cat-attraction">0</span>)
+      </button>
+      <button type="button" onclick="setCategoryFilter('hotel')" id="tab-cat-hotel" class="cat-pill px-4 py-2 rounded-2xl font-bold text-xs transition bg-white text-slate-700 border border-slate-200 hover:border-sky-400 whitespace-nowrap">
+        🏨 โรงแรม & ที่พัก (<span id="count-cat-hotel">0</span>)
+      </button>
+      <button type="button" onclick="setCategoryFilter('restaurant')" id="tab-cat-restaurant" class="cat-pill px-4 py-2 rounded-2xl font-bold text-xs transition bg-white text-slate-700 border border-slate-200 hover:border-amber-400 whitespace-nowrap">
+        🍽️ ร้านอาหาร & คาเฟ่ (<span id="count-cat-restaurant">0</span>)
+      </button>
+      <button type="button" onclick="setCategoryFilter('destination')" id="tab-cat-destination" class="cat-pill px-4 py-2 rounded-2xl font-bold text-xs transition bg-white text-slate-700 border border-slate-200 hover:border-indigo-400 whitespace-nowrap">
+        ✈️ จุดหมายปลายทาง (<span id="count-cat-destination">0</span>)
+      </button>
+    </div>
+
+    <!-- Wishlist Cards Grid -->
+    <div id="wishlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Dynamic rendering via JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="wishlist-empty-view" class="hidden bg-white rounded-3xl border border-slate-200 shadow-sm p-12 text-center max-w-lg mx-auto space-y-4 my-8">
+      <div class="w-20 h-20 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mx-auto shadow-inner">
+        <i data-lucide="heart" class="w-10 h-10 text-rose-400 stroke-1"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-black text-slate-900">ยังไม่มีรายการโปรดที่บันทึกไว้</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto leading-relaxed">
+          เมื่อคุณกดรูปหัวใจ ❤️ ที่สถานที่ท่องเที่ยว โรงแรม หรือร้านอาหารใดๆ รายการเหล่านั้นจะมาปรากฏที่หน้านี้ทันที
+        </p>
+      </div>
+      <div class="pt-2">
+        <a href="index.html#attractions" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-bold text-xs shadow-lg shadow-sky-600/25 transition">
+          <i data-lucide="compass" class="w-4 h-4"></i>
+          <span>เริ่มค้นหาสถานที่เที่ยวและโรงแรมแนะนำ</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200/80 py-6 px-4 text-center text-xs text-slate-400 mt-12">
+    © 2026 MY PROGRAM Platform - แพลตฟอร์มท่องเที่ยวอัจฉริยะ & ระบบรายการโปรด
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/state.js"></script>
+  <script>
+    // Toast Notification System
+    window.showToast = function(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const toast = document.createElement("div");
+      const bgColors = {
+        info: "bg-slate-900 text-white border-slate-700",
+        success: "bg-emerald-600 text-white border-emerald-500",
+        warning: "bg-amber-500 text-white border-amber-400",
+        error: "bg-rose-600 text-white border-rose-500"
+      };
+      const icons = { info: "info", success: "check-circle", warning: "alert-triangle", error: "alert-circle" };
+      toast.className = `toast-card flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold ${bgColors[type] || bgColors.info}`;
+      toast.innerHTML = `<i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 flex-shrink-0"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      if (window.lucide) window.lucide.createIcons();
+      requestAnimationFrame(() => toast.classList.add("show"));
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    };
+
+    let activeCategory = "all";
+
+    // Item Resolver across all DREAM_DATA collections
+    function resolveWishlistItem(id) {
+      if (!window.DREAM_DATA) return null;
+
+      // 1. Attractions
+      const attr = (window.DREAM_DATA.attractions || []).find(a => a.id === id);
+      if (attr) {
+        return {
+          id: attr.id,
+          type: "attraction",
+          typeLabel: "สถานที่ท่องเที่ยว",
+          typeBadgeClass: "bg-emerald-100 text-emerald-800",
+          name: attr.name,
+          location: `${attr.cityTh} • ${attr.category}`,
+          rating: attr.rating,
+          reviewsCount: "แนะนำ",
+          priceText: attr.price === 0 ? "เข้าชมฟรี (0 ฿)" : `${attr.price.toLocaleString()} ฿`,
+          priceSub: attr.price === 0 ? "ไม่มีค่าเข้าชม" : "ราคาบัตรเริ่มต้น",
+          image: attr.image,
+          actionText: attr.price === 0 ? "เพิ่มในแผนทริป" : "ซื้อบัตรทันที",
+          actionIcon: attr.price === 0 ? "calendar" : "ticket",
+          actionType: "book-attr"
+        };
+      }
+
+      // 2. Hotels
+      const hotel = (window.DREAM_DATA.hotels || []).find(h => h.id === id);
+      if (hotel) {
+        return {
+          id: hotel.id,
+          type: "hotel",
+          typeLabel: "โรงแรม & ที่พัก",
+          typeBadgeClass: "bg-sky-100 text-sky-800",
+          name: hotel.name,
+          location: `${hotel.cityTh}, ${hotel.country}`,
+          rating: hotel.rating,
+          reviewsCount: `${hotel.reviewsCount} รีวิว`,
+          priceText: `${hotel.pricePerNight.toLocaleString()} ฿`,
+          priceSub: "เริ่มต้น / คืน",
+          image: hotel.image,
+          actionText: "ดูห้องพัก & จอง",
+          actionIcon: "chevron-right",
+          actionType: "book-hotel"
+        };
+      }
+
+      // 3. Restaurants
+      const rest = (window.DREAM_DATA.restaurants || []).find(r => r.id === id);
+      if (rest) {
+        return {
+          id: rest.id,
+          type: "restaurant",
+          typeLabel: "ร้านอาหาร & คาเฟ่",
+          typeBadgeClass: "bg-amber-100 text-amber-800",
+          name: rest.name,
+          location: `${rest.cityTh} • ${rest.cuisine}`,
+          rating: rest.rating,
+          reviewsCount: `${rest.reviewsCount} รีวิว`,
+          priceText: `~${(rest.averagePrice || 200).toLocaleString()} ฿`,
+          priceSub: "งบเฉลี่ย / ท่าน",
+          image: rest.image,
+          actionText: "จองโต๊ะ",
+          actionIcon: "calendar",
+          actionType: "book-dining"
+        };
+      }
+
+      // 4. Destinations
+      const dest = (window.DREAM_DATA.destinations || []).find(d => d.id === id);
+      if (dest) {
+        const destPrice = Number(dest.startingPrice || dest.startPrice || 0);
+        const reviewCount = Number(dest.reviewCount || dest.reviewsCount || 0);
+        return {
+          id: dest.id,
+          type: "destination",
+          typeLabel: "จุดหมายปลายทาง",
+          typeBadgeClass: "bg-indigo-100 text-indigo-800",
+          name: dest.name,
+          location: dest.country,
+          rating: dest.rating,
+          reviewsCount: `${reviewCount.toLocaleString()} รีวิว`,
+          priceText: `เริ่มต้น ${destPrice.toLocaleString()} ฿`,
+          priceSub: "แพ็กเกจท่องเที่ยว",
+          image: dest.image,
+          actionText: "ดูแพ็กเกจทริป",
+          actionIcon: "compass",
+          actionType: "explore-dest"
+        };
+      }
+
+      return null;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadUserData();
+      renderWishlistPage();
+    });
+
+    function loadUserData() {
+      const state = window.DreamState?.state || {};
+      const user = state.auth?.currentUser || {
+        name: "คุณอนันต์ พิริยพงศ์",
+        email: "anant.traveler@myprogram.com",
+        role: "user",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+      };
+
+      document.getElementById("nav-header-name").textContent = user.name?.split(" ")[0] || "คุณอนันต์";
+      document.getElementById("nav-header-role").textContent = `Role: ${user.role || 'user'}`;
+      document.getElementById("nav-header-avatar").src = user.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80";
+
+      const cartCount = (state.cart || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
+      document.getElementById("cart-badge-count").textContent = cartCount;
+    }
+
+    function renderWishlistPage() {
+      const state = window.DreamState?.state || {};
+      const wishIds = state.wishlist || [];
+
+      // Update counters
+      const totalCount = wishIds.length;
+      document.getElementById("nav-wishlist-badge").textContent = totalCount;
+      document.getElementById("total-wishlist-counter").textContent = `${totalCount} รายการ`;
+
+      const grid = document.getElementById("wishlist-grid");
+      const emptyView = document.getElementById("wishlist-empty-view");
+      const btnClear = document.getElementById("btn-clear-all");
+
+      if (totalCount === 0) {
+        grid.innerHTML = "";
+        emptyView.classList.remove("hidden");
+        btnClear.classList.add("hidden");
+        updateTabCounts({ all: 0, attraction: 0, hotel: 0, restaurant: 0, destination: 0 });
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      emptyView.classList.add("hidden");
+      btnClear.classList.remove("hidden");
+
+      // Resolve all items
+      const allItems = wishIds.map(id => resolveWishlistItem(id)).filter(item => item !== null);
+
+      // Counts per category
+      const counts = {
+        all: allItems.length,
+        attraction: allItems.filter(i => i.type === "attraction").length,
+        hotel: allItems.filter(i => i.type === "hotel").length,
+        restaurant: allItems.filter(i => i.type === "restaurant").length,
+        destination: allItems.filter(i => i.type === "destination").length
+      };
+      updateTabCounts(counts);
+
+      // Filter by active category
+      const filtered = activeCategory === "all" ? allItems : allItems.filter(i => i.type === activeCategory);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center text-slate-400 bg-white rounded-3xl border border-slate-200">
+            <i data-lucide="filter" class="w-10 h-10 mx-auto stroke-1 mb-2 text-slate-300"></i>
+            <p class="font-bold text-slate-600 text-sm">ไม่พบรายการโปรดในหมวดหมู่นี้</p>
+            <button onclick="setCategoryFilter('all')" class="mt-3 px-4 py-2 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold hover:bg-rose-100 transition">
+              ดูรายการโปรดทั้งหมด
+            </button>
+          </div>
+        `;
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="card-item bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group" id="wish-card-${item.id}">
+          <div>
+            <!-- Image Header -->
+            <div class="relative h-52 overflow-hidden">
+              <img src="${item.image}" alt="${item.name}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+              
+              <!-- Category Badge -->
+              <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-extrabold shadow-xs ${item.typeBadgeClass}">
+                ${item.typeLabel}
+              </span>
+
+              <!-- Remove from Wishlist Button -->
+              <button onclick="removeWishlistItem('${item.id}', '${item.name.replace(/'/g, "\\'")}')" class="absolute top-3 right-3 w-9 h-9 rounded-full backdrop-blur-md bg-white/90 hover:bg-rose-500 text-rose-500 hover:text-white flex items-center justify-center transition shadow-md cursor-pointer" title="ลบออกจากรายการโปรด">
+                <i data-lucide="heart" class="w-4 h-4 fill-rose-500 hover:fill-white"></i>
+              </button>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-5 space-y-2">
+              <div class="flex items-center gap-1.5 text-amber-500 text-xs">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <span class="font-bold text-slate-800">${item.rating}</span>
+                <span class="text-slate-400">(${item.reviewsCount})</span>
+                <span class="text-slate-300">•</span>
+                <span class="text-slate-500 font-medium truncate">${item.location}</span>
+              </div>
+
+              <h3 class="font-bold text-slate-900 text-base leading-snug group-hover:text-rose-600 transition line-clamp-1">
+                ${item.name}
+              </h3>
+            </div>
+          </div>
+
+          <!-- Card Footer -->
+          <div class="p-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+            <div>
+              <span class="text-[10px] text-slate-400 block">${item.priceSub}</span>
+              <span class="text-base font-black text-slate-900">${item.priceText}</span>
+            </div>
+            
+            <button onclick="handleActionBook('${item.id}', '${item.actionType}')" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-rose-600 text-white text-xs font-bold shadow-md transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+              <i data-lucide="${item.actionIcon}" class="w-3.5 h-3.5"></i>
+              <span>${item.actionText}</span>
+            </button>
+          </div>
+        </div>
+      `).join("");
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function updateTabCounts(counts) {
+      document.getElementById("count-cat-all").textContent = counts.all || 0;
+      document.getElementById("count-cat-attraction").textContent = counts.attraction || 0;
+      document.getElementById("count-cat-hotel").textContent = counts.hotel || 0;
+      document.getElementById("count-cat-restaurant").textContent = counts.restaurant || 0;
+      document.getElementById("count-cat-destination").textContent = counts.destination || 0;
+    }
+
+    function setCategoryFilter(category) {
+      activeCategory = category;
+      document.querySelectorAll(".cat-pill").forEach(btn => {
+        btn.classList.remove("bg-slate-900", "text-white");
+        btn.classList.add("bg-white", "text-slate-700", "border", "border-slate-200");
+      });
+      const activeBtn = document.getElementById(`tab-cat-${category}`);
+      if (activeBtn) {
+        activeBtn.classList.add("bg-slate-900", "text-white");
+        activeBtn.classList.remove("bg-white", "text-slate-700", "border", "border-slate-200");
+      }
+      renderWishlistPage();
+    }
+
+    function removeWishlistItem(id, name) {
+      window.DreamState.toggleWishlist(id);
+      window.showToast(`นำ "${name}" ออกจากรายการโปรดแล้ว`, "info");
+      renderWishlistPage();
+    }
+
+    function clearAllWishlist() {
+      if (confirm("ต้องการล้างรายการโปรดทั้งหมดหรือไม่?")) {
+        window.DreamState.state.wishlist = [];
+        window.DreamState.saveState();
+        window.showToast("ล้างรายการโปรดทั้งหมดเรียบร้อยแล้ว", "info");
+        renderWishlistPage();
+      }
+    }
+
+    function handleActionBook(id, actionType) {
+      if (actionType === "book-hotel") {
+        window.location.href = `index.html#hotels`;
+      } else if (actionType === "book-attr") {
+        const attr = (window.DREAM_DATA.attractions || []).find(a => a.id === id);
+        if (attr) {
+          window.DreamState.addToCart({
+            id: `ticket-${attr.id}-${Date.now()}`,
+            type: "attraction",
+            title: attr.name,
+            subtitle: `${attr.duration} | เข้าชม`,
+            price: attr.price,
+            quantity: 1,
+            image: attr.image
+          });
+          window.showToast(`เพิ่ม "${attr.name}" ลงในตะกร้าเรียบร้อยแล้ว!`, "success");
+          loadUserData();
+        }
+      } else if (actionType === "book-dining") {
+        window.location.href = `index.html#restaurants`;
+      } else {
+        window.location.href = `index.html`;
+      }
+    }
+  </script>
+</body>
+</html>
+

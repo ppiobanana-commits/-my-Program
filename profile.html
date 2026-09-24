@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Preconnect External CDNs for Fast TTFB -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: 'Prompt', -apple-system, sans-serif; background-color: #f8fafc; }
+    .toast-card {
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-card.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-xs border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo & Home Link -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-base shadow-md group-hover:scale-105 transition">
+            MP
+          </div>
+          <div>
+            <span class="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">MY PROGRAM</span>
+            <span class="text-[10px] text-sky-600 font-bold block leading-tight">ข้อมูลโปรไฟล์ผู้ใช้งาน</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 sm:gap-2">
+        <a href="index.html" class="px-3 py-2 rounded-xl text-slate-600 hover:text-sky-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          <span>หน้าแรก</span>
+        </a>
+        <a href="profile.html" class="px-3 py-2 rounded-xl bg-sky-50 text-sky-700 text-xs font-bold transition flex items-center gap-1.5 shadow-xs border border-sky-200/60">
+          <i data-lucide="user" class="w-4 h-4"></i>
+          <span>โปรไฟล์ของฉัน</span>
+        </a>
+        <a href="wishlist.html" class="px-3 py-2 rounded-xl text-slate-600 hover:text-rose-600 hover:bg-rose-50 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i>
+          <span>รายการโปรด</span>
+          <span id="nav-wishlist-badge" class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500 text-white">0</span>
+        </a>
+        <a href="preferences.html" class="px-3 py-2 rounded-xl text-slate-600 hover:text-amber-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          <span>การตั้งค่าระบบ</span>
+        </a>
+      </nav>
+
+      <!-- Right User Chip & Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Wishlist Quick Icon with Counter -->
+        <a href="wishlist.html" class="relative p-2 sm:p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:text-rose-500 hover:border-rose-300 transition shadow-xs flex-shrink-0" title="รายการโปรดที่บันทึกไว้">
+          <i data-lucide="heart" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          <span id="nav-wishlist-count" class="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-rose-500 text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow-xs">0</span>
+        </a>
+
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-50 border border-slate-200">
+          <img id="nav-header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-7 h-7 rounded-full object-cover ring-1 ring-sky-200">
+          <div class="text-left hidden sm:block">
+            <span id="nav-header-name" class="block font-bold text-xs text-slate-900 leading-tight">คุณอนันต์</span>
+            <span id="nav-header-role" class="block text-[9px] text-slate-400 font-bold uppercase leading-tight">Role: user</span>
+          </div>
+        </div>
+        <a href="index.html" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition flex items-center gap-1" title="กลับหน้าแรก">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">กลับ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
+
+    <!-- Header Banner -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-bold text-slate-400 mb-1">
+          <a href="index.html" class="hover:text-sky-600 transition">หน้าแรก</a>
+          <span>/</span>
+          <span class="text-sky-600">โปรไฟล์ผู้ใช้งาน</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+          <i data-lucide="user-check" class="w-6 h-6 text-sky-600"></i>
+          <span>ข้อมูลโปรไฟล์ของฉัน (My Profile)</span>
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">จัดการข้อมูลส่วนตัว รูปถ่าย และระบุความชอบในการเดินทางเพื่อให้ AI แนะนำทริปได้ตรงใจที่สุด</p>
+      </div>
+
+      <!-- Quick Nav Buttons -->
+      <div class="flex items-center gap-2">
+        <a href="preferences.html" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-amber-50 hover:text-amber-600 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          <span>การตั้งค่าระบบ</span>
+        </a>
+        <button type="button" onclick="handleLogout()" class="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          <span>ออกจากระบบ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Profile Card Form -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-8">
+
+      <!-- 1. Avatar Profile Picture Section -->
+      <div class="flex flex-col sm:flex-row items-center gap-6 p-6 rounded-2xl bg-gradient-to-r from-sky-50/50 to-indigo-50/40 border border-sky-100">
+        <div class="relative group">
+          <img id="profile-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar" class="w-24 h-24 sm:w-28 sm:sm:h-28 rounded-full object-cover ring-4 ring-white shadow-md">
+          <button type="button" onclick="triggerFileUpload()" class="absolute inset-0 rounded-full bg-slate-950/40 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer">
+            <i data-lucide="camera" class="w-6 h-6"></i>
+            <span class="text-[10px] font-bold mt-1">เปลี่ยนรูป</span>
+          </button>
+        </div>
+        <div class="text-center sm:text-left space-y-1.5">
+          <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+            <h3 id="profile-display-name" class="text-lg font-black text-slate-900">คุณอนันต์ พิริยพงศ์</h3>
+            <span id="profile-display-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-sky-100 text-sky-800">Gold Elite</span>
+            <button type="button" onclick="openEditNameModal()" class="px-2.5 py-1 rounded-xl bg-white hover:bg-sky-50 text-sky-700 border border-sky-200 text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-xs" title="คลิกเพื่อเปลี่ยนชื่อ-นามสกุล">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5 text-sky-600"></i>
+              <span>แก้ไขชื่อ</span>
+            </button>
+          </div>
+          <p id="profile-display-email" class="text-xs text-slate-500">anant.traveler@myprogram.com</p>
+          <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+            <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="handleAvatarSelected(this)">
+            <button type="button" onclick="triggerFileUpload()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+              <i data-lucide="upload" class="w-3.5 h-3.5 text-sky-600"></i>
+              <span>อัปโหลดรูปภาพ</span>
+            </button>
+            <button type="button" onclick="selectPresetAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80')" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer">
+              รูปตัวอย่าง 1
+            </button>
+            <button type="button" onclick="selectPresetAvatar('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80')" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer">
+              รูปตัวอย่าง 2
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Personal Information Fields -->
+      <div>
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2 mb-4 pb-2 border-b border-slate-100">
+          <i data-lucide="user" class="w-4 h-4 text-sky-600"></i>
+          <span>ข้อมูลส่วนบุคคลพื้นฐาน</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-slate-700">ชื่อ - นามสกุล *</label>
+              <button type="button" onclick="quickSaveName()" class="text-[11px] text-sky-600 hover:text-sky-700 font-bold flex items-center gap-1 cursor-pointer">
+                <i data-lucide="check" class="w-3 h-3"></i> บันทึกชื่อนี้
+              </button>
+            </div>
+            <div class="relative">
+              <input type="text" id="input-name" class="w-full pl-3.5 pr-20 py-2.5 rounded-xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500" placeholder="เช่น คุณอนันต์ พิริยพงศ์">
+              <button type="button" onclick="quickSaveName()" class="absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shadow-xs">
+                <span>บันทึก</span>
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">อีเมลแอดเดรส *</label>
+            <input type="email" id="input-email" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500 bg-slate-50" readonly>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">หมายเลขโทรศัพท์</label>
+            <input type="tel" id="input-phone" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500" placeholder="089-123-4567">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">หมายเลขหนังสือเดินทาง (Passport No.)</label>
+            <input type="text" id="input-passport" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold uppercase focus:ring-2 focus:ring-sky-500 focus:border-sky-500" placeholder="AA9876543">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Password Security Section -->
+      <div class="pt-4 border-t border-slate-100">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2 mb-4 pb-2 border-b border-slate-100">
+          <i data-lucide="lock" class="w-4 h-4 text-sky-600"></i>
+          <span>เปลี่ยนรหัสผ่าน (เว้นว่างไว้หากไม่ต้องการเปลี่ยน)</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">รหัสผ่านปัจจุบัน</label>
+            <input type="password" id="input-cur-pass" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500" placeholder="รหัสผ่านปัจจุบัน">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">รหัสผ่านใหม่</label>
+            <input type="password" id="input-new-pass" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500" placeholder="อย่างน้อย 6 ตัวอักษร">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ยืนยันรหัสผ่านใหม่</label>
+            <input type="password" id="input-confirm-pass" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500" placeholder="ยืนยันรหัสผ่านอีกครั้ง">
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Travel Preferences for AI (ความชอบในการเข้าพักสำหรับ AI) -->
+      <div class="pt-4 border-t border-slate-100 space-y-4">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div>
+            <h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+              <span>ความชอบในการเข้าพัก (Travel Preferences สำหรับ AI)</span>
+            </h3>
+            <p class="text-xs text-slate-500">AI จะนำข้อมูลเหล่านี้ไปเป็นเกณฑ์การคัดเลือกโรงแรมและจัดทำใบเสนอราคาให้อัตโนมัติ</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 flex items-center gap-1">
+            <i data-lucide="bot" class="w-3 h-3"></i> AI Auto-Sync
+          </span>
+        </div>
+
+        <!-- Bed Types -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">ประเภทเตียงนอนที่ต้องการ</label>
+          <div class="grid grid-cols-3 gap-3" id="bed-types-container">
+            <button type="button" onclick="selectBed('KING')" id="btn-bed-KING" class="p-3 rounded-2xl border-2 border-sky-600 bg-sky-50 text-sky-900 font-bold text-xs text-center cursor-pointer transition shadow-xs">
+              🛏️ เตียงเดี่ยวใหญ่ (King Bed)
+            </button>
+            <button type="button" onclick="selectBed('TWIN')" id="btn-bed-TWIN" class="p-3 rounded-2xl border border-slate-200 bg-white text-slate-700 font-semibold text-xs text-center cursor-pointer hover:border-sky-300 transition">
+              🛏️ เตียงคู่แยก (Twin Bed)
+            </button>
+            <button type="button" onclick="selectBed('SINGLE')" id="btn-bed-SINGLE" class="p-3 rounded-2xl border border-slate-200 bg-white text-slate-700 font-semibold text-xs text-center cursor-pointer hover:border-sky-300 transition">
+              🛏️ เตียงเดี่ยวเล็ก (Single Bed)
+            </button>
+          </div>
+        </div>
+
+        <!-- Checkbox Options -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100/80 transition">
+            <input type="checkbox" id="pref-smoking" class="w-4 h-4 accent-sky-600 rounded">
+            <div>
+              <span class="font-bold text-xs text-slate-800 block">🚭 ต้องการห้องปลอดบุหรี่ (Non-smoking)</span>
+              <span class="text-[10px] text-slate-400">ระบบจะคัดกรองเฉพาะห้องพักปลอดบุหรี่เด็ดขาด</span>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100/80 transition">
+            <input type="checkbox" id="pref-pets" class="w-4 h-4 accent-sky-600 rounded">
+            <div>
+              <span class="font-bold text-xs text-slate-800 block">🐾 นำสัตว์เลี้ยงเข้าพัก (Pet-friendly)</span>
+              <span class="text-[10px] text-slate-400">แสดงเฉพาะที่พักที่อนุญาตให้นำสัตว์เลี้ยงเข้าได้</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Dietary Chips -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">ข้อจำกัดด้านอาหาร / การแพ้อาหาร (Dietary Requirements)</label>
+          <div class="flex flex-wrap gap-2" id="dietary-chips-container">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Special Requests -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">คำขอพิเศษเพิ่มเติมที่ต้องการให้ส่งถึงที่พักทุกครั้ง</label>
+          <input type="text" id="pref-special-requests" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-sky-500" placeholder="เช่น ขอห้องชั้นสูง วิวเมือง, ขอหมอนเสริมเพื่อสุขภาพ, เช็คอินช่วงค่ำ">
+        </div>
+      </div>
+
+      <!-- 5. Saved Guests Management (ผู้ร่วมเดินทางประจำ) -->
+      <div class="pt-4 border-t border-slate-100 space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div>
+            <h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+              <i data-lucide="users" class="w-4 h-4 text-sky-600"></i>
+              <span>รายชื่อผู้ร่วมเดินทางประจำ (Saved Guests)</span>
+            </h3>
+            <p class="text-xs text-slate-500">เลือกกรอกฟอร์มจองและเช็คอินได้ทันทีในคลิกเดียว</p>
+          </div>
+          <button type="button" onclick="promptAddGuest()" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>เพิ่มผู้ร่วมเดินทาง</span>
+          </button>
+        </div>
+
+        <div id="saved-guests-list" class="space-y-2.5">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Action Save Button -->
+      <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <a href="index.html" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition text-center">
+          ยกเลิก / กลับหน้าแรก
+        </a>
+        <button type="button" onclick="saveProfile()" class="w-full sm:w-auto px-7 py-3 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-black shadow-lg shadow-sky-600/30 transition flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          <span>บันทึกข้อมูลโปรไฟล์ & ความชอบ AI ทั้งหมด</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 6. My Bookings Section -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+        <div>
+          <h2 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+            <i data-lucide="ticket" class="w-5 h-5 text-sky-600"></i>
+            <span>ประวัติการจองและคำสั่งซื้อของฉัน (My Bookings)</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">รายการจองโรงแรม, ทริปท่องเที่ยว และกิจกรรมที่ยืนยันแล้วในระบบ</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="/api/bookings/export-csv" download="myprogram-bookings.csv" class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold text-xs transition flex items-center gap-1.5 shadow-xs cursor-pointer" title="ดาวน์โหลดใบเสร็จ CSV">
+            <i data-lucide="download" class="w-4 h-4 text-emerald-600"></i>
+            <span>ดาวน์โหลด CSV</span>
+          </a>
+          <button type="button" onclick="loadUserBookings()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition cursor-pointer" title="รีเฟรชประวัติการจอง">
+            <i data-lucide="refresh-cw" id="refresh-user-bookings-icon" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bookings List Container -->
+      <div id="user-bookings-list" class="space-y-3">
+        <div class="p-8 text-center text-slate-400 text-xs">กำลังโหลดประวัติการจอง...</div>
+      </div>
+    </div>
+
+    <!-- 7. My Support Tickets & Admin Replies Section -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+        <div>
+          <h2 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+            <i data-lucide="headphones" class="w-5 h-5 text-amber-500"></i>
+            <span>ประวัติการติดต่อเจ้าหน้าที่ & ข้อความตอบกลับ (Support Tickets & Replies)</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">รายการปัญหาและข้อสอบถามที่คุณส่งถึงทีมงาน พร้อมข้อความตอบกลับจากแอดมิน</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="loadUserIssues()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition cursor-pointer" title="รีเฟรชประวัติติดต่อเจ้าหน้าที่">
+            <i data-lucide="refresh-cw" id="refresh-user-issues-icon" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tickets List Container -->
+      <div id="user-issues-list" class="space-y-3">
+        <div class="p-8 text-center text-slate-400 text-xs">กำลังโหลดประวัติการติดต่อ...</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal: Quick Edit Name -->
+  <div id="modal-edit-name" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-5 border border-slate-100">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
+            <i data-lucide="user-pen" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-slate-900 text-sm">เปลี่ยนชื่อ - นามสกุลผู้ใช้งาน</h3>
+            <p class="text-[11px] text-slate-400">ชื่อนี้จะแสดงในโปรไฟล์ ใบเสร็จ และการจองโรงแรม</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeEditNameModal()" class="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">ระบุชื่อและนามสกุลใหม่ *</label>
+          <input type="text" id="modal-input-name" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-xs font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-slate-900 shadow-xs" placeholder="เช่น คุณวัชรเทพ รัตนไพศาล">
+        </div>
+        <div class="p-3 rounded-xl bg-sky-50/70 border border-sky-100 text-[11px] text-sky-800 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-sky-600 flex-shrink-0 mt-0.5"></i>
+          <span>เมื่อเปลี่ยนชื่อแล้ว ระบบจะอัปเดตชื่อในแถบเมนูและข้อมูลการจองในระบบทันที</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" onclick="closeEditNameModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer">
+          ยกเลิก
+        </button>
+        <button type="button" onclick="saveNewNameFromModal()" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-md shadow-sky-600/20 cursor-pointer">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>บันทึกชื่อใหม่</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/state.js"></script>
+  <script>
+    let selectedBedType = "KING";
+    let selectedDietary = ["SEAFOOD"];
+    let pendingAvatar = null;
+
+    // Toast helper
+    window.showToast = function(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const toast = document.createElement("div");
+      const bgColors = {
+        info: "bg-slate-900 text-white border-slate-700",
+        success: "bg-emerald-600 text-white border-emerald-500",
+        warning: "bg-amber-500 text-white border-amber-400",
+        error: "bg-rose-600 text-white border-rose-500"
+      };
+      const icons = { info: "info", success: "check-circle", warning: "alert-triangle", error: "alert-circle" };
+      toast.className = `toast-card flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold ${bgColors[type] || bgColors.info}`;
+      toast.innerHTML = `<i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 flex-shrink-0"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      if (window.lucide) window.lucide.createIcons();
+      requestAnimationFrame(() => toast.classList.add("show"));
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadProfileData();
+      loadUserBookings();
+      loadUserIssues();
+      if (window.lucide) window.lucide.createIcons();
+    });
+
+    async function loadUserBookings() {
+      const container = document.getElementById("user-bookings-list");
+      const icon = document.getElementById("refresh-user-bookings-icon");
+      if (icon) icon.classList.add("animate-spin");
+
+      const state = window.DreamState?.state || {};
+      const user = state.auth?.currentUser || {};
+      const email = user.email || "anant.traveler@myprogram.com";
+
+      try {
+        const res = await fetch(`/api/bookings?email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        const bookings = (data.bookings || []);
+
+        if (bookings.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-center space-y-2">
+              <i data-lucide="calendar-x" class="w-8 h-8 text-slate-300 mx-auto"></i>
+              <p class="text-xs font-bold text-slate-600">ยังไม่มีประวัติการจอง</p>
+              <p class="text-[11px] text-slate-400">เมื่อคุณทำการจองโรงแรมหรือทริปท่องเที่ยว รายการจะบันทึกที่นี่โดยอัตโนมัติ</p>
+              <a href="index.html" class="inline-block mt-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition shadow-xs">
+                สำรวจที่พักและกิจกรรม
+              </a>
+            </div>
+          `;
+        } else {
+          container.innerHTML = bookings.map(b => {
+            const dateStr = new Date(b.createdAt || Date.now()).toLocaleDateString("th-TH", {
+              year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+            });
+            const isConfirmed = b.status === "CONFIRMED";
+
+            return `
+              <div class="p-4 sm:p-5 rounded-2xl border border-slate-200 hover:border-sky-300 transition bg-slate-50/50 hover:bg-white space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/60 pb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${isConfirmed ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                      ${isConfirmed ? '✓ ยืนยันแล้ว' : b.status}
+                    </span>
+                    <span class="font-mono font-bold text-xs text-slate-900">${b.id}</span>
+                    <span class="text-[11px] text-slate-400">• ${dateStr}</span>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-sm font-black text-slate-900">${(Number(b.totalPrice || b.totalAmount) || 0).toLocaleString()} ฿</span>
+                    <span class="text-[10px] text-slate-400 block">${b.paymentMethod || 'PromptPay QR'}</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                  <div>
+                    <span class="text-[10px] text-slate-400 block">โรงแรม / กิจกรรม:</span>
+                    <span class="font-bold text-slate-900">${b.hotelName || b.itemsSummary || 'ที่พัก'}</span>
+                    ${b.roomType ? `<span class="text-[10px] text-slate-500 block">${b.roomType}</span>` : ''}
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-slate-400 block">วันเข้าพัก - เช็คเอาท์:</span>
+                    <span class="font-bold text-slate-700">${b.checkIn || '-'} ➔ ${b.checkOut || '-'}</span>
+                    ${b.nights ? `<span class="text-[10px] text-sky-600 font-bold block">${b.nights} คืน</span>` : ''}
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-slate-400 block">ผู้เข้าพัก:</span>
+                    <span class="font-bold text-slate-700">${b.customerName || '-'}</span>
+                    <span class="text-[10px] text-slate-400 block">${b.contactPhone || ''}</span>
+                  </div>
+                  <div class="flex items-center sm:justify-end">
+                    <button type="button" onclick="alert('รหัสการจอง: ${b.id}\\nผู้จอง: ${b.customerName}\\nโรงแรม: ${b.hotelName || b.itemsSummary}\\nยอดชำระ: ${(Number(b.totalPrice || b.totalAmount) || 0).toLocaleString()} บาท\\nสถานะ: ${b.status}')" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-sky-400 text-slate-700 font-bold text-xs transition flex items-center gap-1 shadow-xs cursor-pointer">
+                      <i data-lucide="receipt" class="w-3.5 h-3.5 text-sky-600"></i>
+                      <span>ดูรายละเอียด</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("");
+        }
+      } catch (e) {
+        container.innerHTML = `<div class="p-4 text-center text-rose-500 text-xs">เกิดข้อผิดพลาดในการโหลดประวัติการจอง</div>`;
+      } finally {
+        if (icon) setTimeout(() => icon.classList.remove("animate-spin"), 400);
+        if (window.lucide) window.lucide.createIcons();
+      }
+    }
+
+    async function loadUserIssues() {
+      const container = document.getElementById("user-issues-list");
+      const icon = document.getElementById("refresh-user-issues-icon");
+      if (icon) icon.classList.add("animate-spin");
+
+      const state = window.DreamState?.state || {};
+      const user = state.auth?.currentUser || {};
+      const email = user.email || "anant.traveler@myprogram.com";
+
+      try {
+        const res = await fetch(`/api/user/issues?email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        const issues = (data.issues || []);
+
+        if (issues.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-center space-y-2">
+              <i data-lucide="message-square" class="w-8 h-8 text-slate-300 mx-auto"></i>
+              <p class="text-xs font-bold text-slate-600">ยังไม่มีประวัติการติดต่อเจ้าหน้าที่</p>
+              <p class="text-[11px] text-slate-400">เมื่อคุณส่งข้อความติดต่อฝ่ายบริการลูกค้า รายการและคำตอบจากแอดมินจะแสดงที่นี่</p>
+            </div>
+          `;
+        } else {
+          container.innerHTML = issues.map(iss => {
+            const isResolved = iss.status === 'RESOLVED';
+            const dateStr = new Date(iss.createdAt || Date.now()).toLocaleDateString("th-TH", {
+              year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+            });
+
+            return `
+              <div class="p-4 sm:p-5 rounded-2xl border ${isResolved ? 'border-slate-200 bg-white' : 'border-amber-200 bg-amber-50/30'} space-y-3 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-black ${isResolved ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                      ${isResolved ? '✓ ได้รับการแก้ไขแล้ว' : '⏳ รอดำเนินการ'}
+                    </span>
+                    <span class="font-mono font-bold text-xs text-slate-900">#${iss.id}</span>
+                    <span class="text-xs text-slate-400">• ${dateStr}</span>
+                  </div>
+                  <span class="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-lg w-max">
+                    หมวดหมู่: ${iss.category || 'ทั่วไป'}
+                  </span>
+                </div>
+
+                <div class="text-xs text-slate-700">
+                  <span class="text-slate-400 block text-[11px] mb-0.5">ข้อความที่คุณแจ้ง:</span>
+                  <p class="font-medium bg-slate-50 p-2.5 rounded-xl border border-slate-100">${iss.message}</p>
+                </div>
+
+                ${isResolved && iss.adminReply ? `
+                  <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1">
+                    <div class="flex items-center justify-between text-xs font-bold text-emerald-900">
+                      <div class="flex items-center gap-1.5">
+                        <i data-lucide="headphones" class="w-4 h-4 text-emerald-600"></i>
+                        <span>ข้อความตอบกลับจากแอดมิน:</span>
+                      </div>
+                      <span class="text-[10px] text-emerald-700 font-normal">✉️ ส่งเข้าอีเมลแล้ว</span>
+                    </div>
+                    <p class="text-xs font-medium whitespace-pre-wrap pl-5 text-emerald-900 pt-0.5">${iss.adminReply}</p>
+                  </div>
+                ` : `
+                  <div class="p-2.5 rounded-xl bg-amber-50 text-amber-800 text-[11px] font-medium flex items-center gap-2">
+                    <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i>
+                    <span>เจ้าหน้าที่กำลังตรวจสอบเรื่องนี้ และจะส่งข้อความตอบกลับเข้าอีเมลของคุณโดยเร็วที่สุด</span>
+                  </div>
+                `}
+              </div>
+            `;
+          }).join("");
+        }
+      } catch (e) {
+        container.innerHTML = `<div class="p-4 text-center text-rose-500 text-xs">เกิดข้อผิดพลาดในการโหลดประวัติติดต่อเจ้าหน้าที่</div>`;
+      } finally {
+        if (icon) setTimeout(() => icon.classList.remove("animate-spin"), 400);
+        if (window.lucide) window.lucide.createIcons();
+      }
+    }
+
+    function loadProfileData() {
+      const state = window.DreamState?.state || {};
+      const user = state.auth?.currentUser || {
+        name: "คุณอนันต์ พิริยพงศ์",
+        email: "anant.traveler@myprogram.com",
+        phone: "089-123-4567",
+        passportNo: "AA9876543",
+        tier: "Gold Elite",
+        role: "user",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
+      };
+
+      // Header chip
+      document.getElementById("nav-header-name").textContent = user.name?.split(" ")[0] || "คุณอนันต์";
+      document.getElementById("nav-header-role").textContent = `Role: ${user.role || 'user'}`;
+      document.getElementById("nav-header-avatar").src = user.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80";
+
+      // Wishlist Badges
+      const wishCount = (state.wishlist || []).length;
+      const navWishBadge = document.getElementById("nav-wishlist-badge");
+      const navWishCount = document.getElementById("nav-wishlist-count");
+      if (navWishBadge) navWishBadge.textContent = wishCount;
+      if (navWishCount) navWishCount.textContent = wishCount;
+
+      // Profile Card Info
+      document.getElementById("profile-display-name").textContent = user.name || "";
+      document.getElementById("profile-display-email").textContent = user.email || "";
+      document.getElementById("profile-display-badge").textContent = user.tier || "Member";
+      document.getElementById("profile-avatar-img").src = user.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80";
+      pendingAvatar = user.avatar;
+
+      // Inputs
+      document.getElementById("input-name").value = user.name || "";
+      document.getElementById("input-email").value = user.email || "";
+      document.getElementById("input-phone").value = user.phone || "";
+      document.getElementById("input-passport").value = user.passportNo || "";
+
+      // Travel Preferences
+      const prefs = state.travelPreferences || {
+        bedType: "KING",
+        smokingAllowed: false,
+        petFriendly: false,
+        dietaryAllergies: ["SEAFOOD"],
+        specialRequests: "ต้องการห้องวิวเมือง เงียบสงบ เตียงคิงไซส์"
+      };
+
+      selectBed(prefs.bedType || "KING");
+      document.getElementById("pref-smoking").checked = Boolean(prefs.smokingAllowed);
+      document.getElementById("pref-pets").checked = Boolean(prefs.petFriendly);
+      document.getElementById("pref-special-requests").value = prefs.specialRequests || "";
+
+      selectedDietary = Array.isArray(prefs.dietaryAllergies) ? [...prefs.dietaryAllergies] : ["SEAFOOD"];
+      renderDietaryChips();
+
+      // Saved Guests
+      renderSavedGuests();
+    }
+
+    function selectBed(type) {
+      selectedBedType = type;
+      ["KING", "TWIN", "SINGLE"].forEach(b => {
+        const btn = document.getElementById(`btn-bed-${b}`);
+        if (btn) {
+          if (b === type) {
+            btn.className = "p-3 rounded-2xl border-2 border-sky-600 bg-sky-50 text-sky-900 font-bold text-xs text-center cursor-pointer transition shadow-xs";
+          } else {
+            btn.className = "p-3 rounded-2xl border border-slate-200 bg-white text-slate-700 font-semibold text-xs text-center cursor-pointer hover:border-sky-300 transition";
+          }
+        }
+      });
+    }
+
+    function renderDietaryChips() {
+      const container = document.getElementById("dietary-chips-container");
+      if (!container) return;
+      const chips = [
+        { code: "SEAFOOD", label: "🦐 แพ้อาหารทะเล" },
+        { code: "PEANUTS", label: "🥜 แพ้ถั่วลิสง" },
+        { code: "GLUTEN_FREE", label: "🌾 กลูเตนฟรี" },
+        { code: "HALAL", label: "🌙 อาหารฮาลาล" },
+        { code: "VEGETARIAN", label: "🥗 มังสวิรัติ" }
+      ];
+      container.innerHTML = chips.map(c => {
+        const isSel = selectedDietary.includes(c.code);
+        return `
+          <button type="button" onclick="toggleDietary('${c.code}')" class="px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer transition ${
+            isSel ? 'border-sky-600 bg-sky-50 text-sky-900 shadow-xs' : 'border-slate-200 bg-white text-slate-700 hover:border-sky-300'
+          }">
+            ${c.label}
+          </button>
+        `;
+      }).join("");
+    }
+
+    function toggleDietary(code) {
+      const idx = selectedDietary.indexOf(code);
+      if (idx > -1) selectedDietary.splice(idx, 1);
+      else selectedDietary.push(code);
+      renderDietaryChips();
+    }
+
+    function triggerFileUpload() {
+      document.getElementById("avatar-file-input")?.click();
+    }
+
+    function handleAvatarSelected(input) {
+      if (!input.files || input.files.length === 0) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        pendingAvatar = e.target.result;
+        document.getElementById("profile-avatar-img").src = pendingAvatar;
+        window.showToast("เลือกรูปภาพใหม่เรียบร้อยแล้ว กดปุ่มบันทึกเพื่อใช้งาน", "info");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectPresetAvatar(url) {
+      pendingAvatar = url;
+      document.getElementById("profile-avatar-img").src = url;
+      window.showToast("เลือกรูปพรีเซ็ตแล้ว กดปุ่มบันทึกเพื่อยืนยัน", "info");
+    }
+
+    function renderSavedGuests() {
+      const cont = document.getElementById("saved-guests-list");
+      if (!cont) return;
+      const state = window.DreamState?.state;
+      const guests = state?.savedGuests || [];
+
+      if (guests.length === 0) {
+        cont.innerHTML = `<div class="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-200 text-center text-xs text-slate-400">ยังไม่มีรายชื่อผู้ร่วมเดินทางประจำ</div>`;
+        return;
+      }
+
+      cont.innerHTML = guests.map(g => `
+        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-sky-300 transition">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-xs">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs text-slate-900">${g.fullName}</span>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-sky-100 text-sky-800">${g.relation || 'ผู้ร่วมเดินทาง'}</span>
+              </div>
+              <span class="text-[10px] text-slate-500 block mt-0.5">Passport: ${g.passportNo || '-'} • สัญชาติ: ${g.nationality || 'Thai'} • วันเกิด: ${g.dateOfBirth || '-'}</span>
+            </div>
+          </div>
+          <button type="button" onclick="removeGuest('${g.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer" title="ลบ">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `).join("");
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function promptAddGuest() {
+      const name = prompt("ชื่อ - นามสกุล ผู้ร่วมเดินทาง:");
+      if (!name || !name.trim()) return;
+      const relation = prompt("ความสัมพันธ์ (เช่น คู่สมรส, บุตร, เพื่อน):", "คู่สมรส") || "คู่สมรส";
+      const passport = prompt("หมายเลขหนังสือเดินทาง (Passport No.):", "") || "";
+      const dob = prompt("วันเกิด (YYYY-MM-DD เช่น 1995-05-14):", "1995-01-01") || "";
+
+      window.DreamState.addSavedGuest({
+        fullName: name.trim(),
+        relation: relation.trim(),
+        passportNo: passport.trim().toUpperCase(),
+        dateOfBirth: dob.trim(),
+        nationality: "Thai"
+      }).then(() => {
+        renderSavedGuests();
+        window.showToast(`เพิ่ม "${name.trim()}" ในรายชื่อผู้ร่วมเดินทางเรียบร้อยแล้ว`, "success");
+      });
+    }
+
+    function removeGuest(id) {
+      if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบผู้ร่วมเดินทางนี้?")) {
+        window.DreamState.deleteSavedGuest(id).then(() => {
+          renderSavedGuests();
+          window.showToast("ลบผู้ร่วมเดินทางแล้ว", "info");
+        });
+      }
+    }
+
+    async function saveProfile() {
+      const name = document.getElementById("input-name").value.trim();
+      const phone = document.getElementById("input-phone").value.trim();
+      const passportNo = document.getElementById("input-passport").value.trim();
+      const curPass = document.getElementById("input-cur-pass").value.trim();
+      const newPass = document.getElementById("input-new-pass").value.trim();
+      const confirmPass = document.getElementById("input-confirm-pass").value.trim();
+
+      const smokingAllowed = document.getElementById("pref-smoking").checked;
+      const petFriendly = document.getElementById("pref-pets").checked;
+      const specialRequests = document.getElementById("pref-special-requests").value.trim();
+
+      if (!name) {
+        window.showToast("กรุณาระบุชื่อ-นามสกุล", "warning");
+        return;
+      }
+
+      if (newPass) {
+        if (!curPass) {
+          window.showToast("กรุณากรอกรหัสผ่านเดิมเพื่อความปลอดภัย", "warning");
+          return;
+        }
+        if (newPass.length < 6) {
+          window.showToast("รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร", "warning");
+          return;
+        }
+        if (newPass !== confirmPass) {
+          window.showToast("รหัสผ่านใหม่และการยืนยันไม่ตรงกัน", "warning");
+          return;
+        }
+      }
+
+      const payload = { name, phone, passportNo };
+      if (pendingAvatar) payload.avatar = pendingAvatar;
+      if (newPass) {
+        payload.currentPassword = curPass;
+        payload.newPassword = newPass;
+      }
+
+      // 1. Update Profile Info
+      const res = await window.DreamState.updateProfile(payload);
+
+      // 2. Update Travel Preferences
+      await window.DreamState.updateTravelPreferences({
+        bedType: selectedBedType,
+        smokingAllowed,
+        petFriendly,
+        floorPreference: "HIGH",
+        dietaryAllergies: selectedDietary,
+        specialRequests
+      });
+
+      if (res.success) {
+        document.getElementById("input-cur-pass").value = "";
+        document.getElementById("input-new-pass").value = "";
+        document.getElementById("input-confirm-pass").value = "";
+        window.showToast("บันทึกข้อมูลโปรไฟล์และความชอบการเดินทางสำหรับ AI เรียบร้อยแล้ว!", "success");
+        loadProfileData();
+      } else {
+        window.showToast(res.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล", "error");
+      }
+    }
+
+    // --- Quick Edit Name Logic ---
+    function openEditNameModal() {
+      const curName = document.getElementById("input-name")?.value || document.getElementById("profile-display-name")?.textContent || "";
+      const modalInput = document.getElementById("modal-input-name");
+      if (modalInput) modalInput.value = curName.trim();
+      const modal = document.getElementById("modal-edit-name");
+      if (modal) modal.classList.remove("hidden");
+      if (window.lucide) window.lucide.createIcons();
+      if (modalInput) setTimeout(() => modalInput.focus(), 150);
+    }
+
+    function closeEditNameModal() {
+      const modal = document.getElementById("modal-edit-name");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    async function saveNewNameFromModal() {
+      const modalInput = document.getElementById("modal-input-name");
+      const newName = (modalInput?.value || "").trim();
+      if (!newName) {
+        window.showToast("กรุณากรอกชื่อ-นามสกุล", "warning");
+        return;
+      }
+      closeEditNameModal();
+      await applyUpdatedName(newName);
+    }
+
+    async function quickSaveName() {
+      const newName = (document.getElementById("input-name")?.value || "").trim();
+      if (!newName) {
+        window.showToast("กรุณากรอกชื่อ-นามสกุล", "warning");
+        return;
+      }
+      await applyUpdatedName(newName);
+    }
+
+    async function applyUpdatedName(newName) {
+      // 1. Immediate UI update
+      const input = document.getElementById("input-name");
+      const displayName = document.getElementById("profile-display-name");
+      const navHeader = document.getElementById("nav-header-name");
+
+      if (input) input.value = newName;
+      if (displayName) displayName.textContent = newName;
+      if (navHeader) navHeader.textContent = newName.split(" ")[0] || newName;
+
+      // 2. Persist to Backend and DreamState
+      const res = await window.DreamState.updateProfile({ name: newName });
+      if (res.success) {
+        window.showToast(`✅ เปลี่ยนชื่อเป็น "${newName}" เรียบร้อยแล้ว!`, "success");
+        loadProfileData();
+      } else {
+        window.showToast(res.message || "เกิดข้อผิดพลาดในการบันทึกชื่อ", "error");
+      }
+    }
+
+    function handleLogout() {
+      if (confirm("คุณต้องการออกจากระบบหรือไม่?")) {
+        if (window.DreamState && typeof window.DreamState.clearSession === "function") {
+          window.DreamState.clearSession();
+        } else if (window.DreamState && typeof window.DreamState.logout === "function") {
+          window.DreamState.logout();
+        }
+        window.location.href = "login.html";
+      }
+    }
+  </script>
+</body>
+</html>
+

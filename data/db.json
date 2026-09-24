@@ -1,0 +1,1458 @@
+{
+  "users": {
+    "anant.traveler@myprogram.com": {
+      "id": "usr-01",
+      "name": "วัชรเทพ",
+      "email": "anant.traveler@myprogram.com",
+      "password": "123",
+      "phone": "089-123-4567",
+      "passportNo": "AA9876543",
+      "nationality": "Thai",
+      "tier": "Gold Elite",
+      "points": 22095,
+      "nextTierPoints": 5000,
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+      "accountType": "personal",
+      "wallet": {
+        "balances": {
+          "THB": 45000,
+          "JPY": 85000,
+          "USD": 650
+        },
+        "transactions": [
+          {
+            "id": "tx-1",
+            "type": "topup",
+            "title": "เติมเงินเข้ากระเป๋า (พร้อมเพย์)",
+            "amount": "+20,000 THB",
+            "date": "2026-03-01 10:15",
+            "status": "สำเร็จ"
+          }
+        ]
+      },
+      "savedTravelers": [
+        {
+          "id": "trv-1",
+          "name": "คุณแพรวา พิริยพงศ์",
+          "relation": "คู่สมรส",
+          "phone": "081-987-6543",
+          "passportNo": "AA8765432"
+        }
+      ],
+      "role": "user",
+      "createdAt": "2026-01-15T08:00:00.000Z",
+      "travelPreferences": {
+        "bedType": "KING",
+        "smokingAllowed": false,
+        "petFriendly": false,
+        "floorPreference": "HIGH",
+        "dietaryAllergies": [],
+        "specialRequests": ""
+      },
+      "savedGuests": [
+        {
+          "id": "gst-01",
+          "fullName": "คุณแพรวา พิริยพงศ์",
+          "dateOfBirth": "1992-05-14",
+          "nationality": "Thai",
+          "passportNo": "AA8765432",
+          "relation": "คู่สมรส"
+        },
+        {
+          "id": "gst-02",
+          "fullName": "ด.ช. พศิน พิริยพงศ์",
+          "dateOfBirth": "2018-09-20",
+          "nationality": "Thai",
+          "passportNo": "AA7654321",
+          "relation": "บุตร"
+        }
+      ],
+      "systemSettings": {
+        "aiPersona": "VALUE_FOCUSED",
+        "aiCreativity": 0.4,
+        "emailNotify": true,
+        "lineNotifyToken": "",
+        "twoFactorEnabled": false
+      },
+      "activeSessions": [
+        {
+          "id": "sess-01",
+          "device": "Windows 11 (Chrome 128) - เครื่องปัจจุบัน",
+          "ip": "182.53.89.243",
+          "lastActive": "เมื่อสักครู่",
+          "current": true
+        },
+        {
+          "id": "sess-02",
+          "device": "iPhone 15 Pro (Safari Mobile)",
+          "ip": "182.53.90.112",
+          "lastActive": "2 ชั่วโมงที่แล้ว",
+          "current": false
+        }
+      ],
+      "preferences": {
+        "language": "th",
+        "primaryCurrency": "THB",
+        "notifyDeals": true,
+        "notifyUpdates": true,
+        "notifyRates": true,
+        "googleSheetsWebhookUrl": "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec"
+      }
+    },
+    "corporate@globaltravel.co.th": {
+      "id": "usr-corp-01",
+      "name": "บจก. โกลบอล ทราเวล คอร์ปอเรชั่น",
+      "email": "corporate@globaltravel.co.th",
+      "password": "123",
+      "phone": "02-999-8888",
+      "passportNo": "CORP-TH-9921",
+      "nationality": "Thai",
+      "tier": "Corporate VIP",
+      "accountType": "corporate",
+      "points": 18900,
+      "nextTierPoints": 25000,
+      "avatar": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80",
+      "wallet": {
+        "balances": {
+          "THB": 250000,
+          "USD": 4500
+        },
+        "transactions": []
+      },
+      "savedTravelers": [],
+      "role": "admin",
+      "createdAt": "2026-02-01T10:00:00.000Z",
+      "preferences": {
+        "googleSheetsWebhookUrl": "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec"
+      }
+    },
+    "admin@myprogram.com": {
+      "id": "usr-admin-01",
+      "name": "ผู้ดูแลระบบ (Admin)",
+      "email": "admin@myprogram.com",
+      "password": "admin1234",
+      "phone": "02-111-9999",
+      "passportNo": "ADMIN001",
+      "nationality": "Thai",
+      "tier": "System Administrator",
+      "accountType": "admin",
+      "points": 99999,
+      "nextTierPoints": 99999,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
+      "wallet": {
+        "balances": {
+          "THB": 999999
+        },
+        "transactions": []
+      },
+      "savedTravelers": [],
+      "role": "admin",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "systemSettings": {
+        "twoFactorEnabled": false
+      },
+      "preferences": {
+        "googleSheetsWebhookUrl": "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec"
+      }
+    },
+    "ppiobanana@gmail.com": {
+      "id": "usr-1789667693792",
+      "name": "วัชรเทพ",
+      "email": "ppiobanana@gmail.com",
+      "password": "tepzacommm",
+      "phone": "-",
+      "passportNo": "AA8380522",
+      "nationality": "Thai",
+      "tier": "Silver Member",
+      "accountType": "personal",
+      "points": 500,
+      "nextTierPoints": 2000,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
+      "wallet": {
+        "balances": {
+          "THB": 10000
+        },
+        "transactions": []
+      },
+      "savedTravelers": [],
+      "role": "user",
+      "createdAt": "2026-09-17T17:54:53.792Z",
+      "systemSettings": {
+        "aiPersona": "VALUE_FOCUSED",
+        "aiCreativity": 0.4
+      },
+      "preferences": {
+        "googleSheetsWebhookUrl": "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec"
+      }
+    }
+  },
+  "bookings": [
+    {
+      "id": "BK-1790268604328",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ (Audit Test)",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "Audit Test Hotel Resort & Spa",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 4500,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-249599",
+      "status": "COMPLETED",
+      "source": "audit-test",
+      "createdAt": "2026-09-24T16:50:04.328Z",
+      "updatedAt": "2026-09-24T16:50:04.334Z"
+    },
+    {
+      "id": "BK-1790268244889",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "Shibuya Crossing (ห้าแยกชิบูย่า) (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 0,
+      "currency": "THB",
+      "paymentMethod": "พร้อมเพย์ QR Code (PromptPay)",
+      "paymentRef": "TX-145650",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-24T16:44:04.889Z"
+    },
+    {
+      "id": "BK-1790268209599",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "โตเกียว ซากุระ โรแมนติก 5 วัน 4 คืน (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 41623,
+      "currency": "THB",
+      "paymentMethod": "กระเป๋าเงินออนไลน์ (MY PROGRAM Travel Wallet)",
+      "paymentRef": "TX-197535",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-24T16:43:29.599Z"
+    },
+    {
+      "id": "BK-1790059061550",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "โตเกียว ซากุระ โรแมนติก 5 วัน 4 คืน (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 41623,
+      "currency": "THB",
+      "paymentMethod": "บัตรเครดิต/เดบิต (Visa/Mastercard/JCB)",
+      "paymentRef": "TX-548946",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-22T06:37:41.550Z"
+    },
+    {
+      "id": "BK-1790055446532",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "eSIM Europe 33 ประเทศ (สวิส ฝรั่งเศส อิตาลี เยอรมนี ฯลฯ) (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 738,
+      "currency": "THB",
+      "paymentMethod": "กระเป๋าเงินออนไลน์ (MY PROGRAM Travel Wallet)",
+      "paymentRef": "TX-538958",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-22T05:37:26.532Z"
+    },
+    {
+      "id": "BK-1790055341281",
+      "userId": "usr-guest",
+      "userEmail": "watcharatep@example.com",
+      "customerName": "คุณวัชรเทพ (ทดสอบระบบสด)",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "Grande Centre Point Space Pattaya",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 5800,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-286465",
+      "status": "CONFIRMED",
+      "source": "live-test",
+      "createdAt": "2026-09-22T05:35:41.281Z"
+    },
+    {
+      "id": "BK-1790053571721",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "The Savoy London (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 63130,
+      "currency": "THB",
+      "paymentMethod": "บัตรเครดิต/เดบิต (Visa/Mastercard/JCB)",
+      "paymentRef": "TX-221068",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-22T05:06:11.721Z"
+    },
+    {
+      "id": "BK-1790053493808",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "Ubud Tropical Glamping (อูบุด บาหลี) (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 813,
+      "currency": "THB",
+      "paymentMethod": "ผ่อนชำระ 0% (6 เดือน)",
+      "paymentRef": "TX-898034",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-22T05:04:53.808Z"
+    },
+    {
+      "id": "BK-1789955333388",
+      "userId": "usr-guest",
+      "userEmail": "test_user_20@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 20",
+      "contactPhone": "0891112220",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 4500,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-969335",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.388Z"
+    },
+    {
+      "id": "BK-1789955333386",
+      "userId": "usr-guest",
+      "userEmail": "test_user_19@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 19",
+      "contactPhone": "0891112219",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 4400,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-945768",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.386Z"
+    },
+    {
+      "id": "BK-1789955333384",
+      "userId": "usr-guest",
+      "userEmail": "test_user_18@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 18",
+      "contactPhone": "0891112218",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 4300,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-513365",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.384Z"
+    },
+    {
+      "id": "BK-1789955333382",
+      "userId": "usr-guest",
+      "userEmail": "test_user_17@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 17",
+      "contactPhone": "0891112217",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 4200,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-560591",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.382Z"
+    },
+    {
+      "id": "BK-1789955333381",
+      "userId": "usr-guest",
+      "userEmail": "test_user_16@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 16",
+      "contactPhone": "0891112216",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 4100,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-596042",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.381Z"
+    },
+    {
+      "id": "BK-1789955333379",
+      "userId": "usr-guest",
+      "userEmail": "test_user_15@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 15",
+      "contactPhone": "0891112215",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 4000,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-225913",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.379Z"
+    },
+    {
+      "id": "BK-1789955333376",
+      "userId": "usr-guest",
+      "userEmail": "test_user_14@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 14",
+      "contactPhone": "0891112214",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3900,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-662795",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.376Z"
+    },
+    {
+      "id": "BK-1789955333374",
+      "userId": "usr-guest",
+      "userEmail": "test_user_13@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 13",
+      "contactPhone": "0891112213",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3800,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-476850",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.374Z"
+    },
+    {
+      "id": "BK-1789955333372",
+      "userId": "usr-guest",
+      "userEmail": "test_user_12@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 12",
+      "contactPhone": "0891112212",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3700,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-148209",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.372Z"
+    },
+    {
+      "id": "BK-1789955333370",
+      "userId": "usr-guest",
+      "userEmail": "test_user_11@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 11",
+      "contactPhone": "0891112211",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3600,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-730608",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.370Z"
+    },
+    {
+      "id": "BK-1789955333367",
+      "userId": "usr-guest",
+      "userEmail": "test_user_10@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 10",
+      "contactPhone": "0891112210",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3500,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-605572",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.367Z"
+    },
+    {
+      "id": "BK-1789955333364",
+      "userId": "usr-guest",
+      "userEmail": "test_user_9@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 9",
+      "contactPhone": "0891112209",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3400,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-924829",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.364Z"
+    },
+    {
+      "id": "BK-1789955333362",
+      "userId": "usr-guest",
+      "userEmail": "test_user_8@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 8",
+      "contactPhone": "0891112208",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3300,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-397774",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.362Z"
+    },
+    {
+      "id": "BK-1789955333359",
+      "userId": "usr-guest",
+      "userEmail": "test_user_7@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 7",
+      "contactPhone": "0891112207",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3200,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-597498",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.359Z"
+    },
+    {
+      "id": "BK-1789955333357",
+      "userId": "usr-guest",
+      "userEmail": "test_user_5@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 5",
+      "contactPhone": "0891112205",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3000,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-681314",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.357Z"
+    },
+    {
+      "id": "BK-1789955333355",
+      "userId": "usr-guest",
+      "userEmail": "test_user_6@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 6",
+      "contactPhone": "0891112206",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 3100,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-323894",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.355Z"
+    },
+    {
+      "id": "BK-1789955333353",
+      "userId": "usr-guest",
+      "userEmail": "test_user_4@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 4",
+      "contactPhone": "0891112204",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 2900,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-280621",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.353Z"
+    },
+    {
+      "id": "BK-1789955333351",
+      "userId": "usr-guest",
+      "userEmail": "test_user_3@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 3",
+      "contactPhone": "0891112203",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 2800,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-807555",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.351Z"
+    },
+    {
+      "id": "BK-1789955333348",
+      "userId": "usr-guest",
+      "userEmail": "test_user_2@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 2",
+      "contactPhone": "0891112202",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 2700,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-409027",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.348Z"
+    },
+    {
+      "id": "BK-1789955333287",
+      "userId": "usr-guest",
+      "userEmail": "test_user_1@example.com",
+      "customerName": "ลูกค้าทดสอบท่านที่ 1",
+      "contactPhone": "0891112201",
+      "hotelId": "h-custom",
+      "hotelName": "โรงแรมที่พัก",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 2600,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-117487",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-21T01:48:53.287Z"
+    },
+    {
+      "id": "BK-1789954617740",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "Rayavadee Resort Krabi (รายาวดี) (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 35310,
+      "currency": "THB",
+      "paymentMethod": "บัตรเครดิต/เดบิต (Visa/Mastercard/JCB)",
+      "paymentRef": "TX-718345",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-21T01:36:57.741Z"
+    },
+    {
+      "id": "BK-1789928353826",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "จองโต๊ะร้าน Ichiran Ramen Shinjuku (ราเมนข้อสอบ) (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 2140,
+      "currency": "THB",
+      "paymentMethod": "กระเป๋าเงินออนไลน์ (MY PROGRAM Travel Wallet)",
+      "paymentRef": "TX-427179",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-20T18:19:13.826Z"
+    },
+    {
+      "id": "BK-1789928240940",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "วัชรเทพ",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "เทือกเขาแอลป์สวิส ชาเลต์หรู 6 วัน 5 คืน + Swiss Travel Pass (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 80143,
+      "currency": "THB",
+      "paymentMethod": "ผ่อนชำระ 0% (10 เดือน)",
+      "paymentRef": "TX-361674",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-20T18:17:20.940Z"
+    },
+    {
+      "id": "BK-1789927955462",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "คุณอนันต์ พิริยพงศ์",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "Trisara Resort Phuket (ตรีสรา) (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 52430,
+      "currency": "THB",
+      "paymentMethod": "พร้อมเพย์ QR Code (PromptPay)",
+      "paymentRef": "TX-402322",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-20T18:12:35.462Z"
+    },
+    {
+      "id": "BK-1789927852229",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "คุณวัชรเทพ (ทดสอบระบบสมบูรณ์)",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "Cape Dara Resort Pattaya (Deluxe Ocean View)",
+      "roomType": "Deluxe Ocean View",
+      "checkIn": "2026-10-01",
+      "checkOut": "2026-10-03",
+      "nights": 2,
+      "guests": {
+        "adults": 2,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 8900,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "TX-980076",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-09-20T18:10:52.229Z"
+    },
+    {
+      "id": "BK-1789926850590",
+      "userId": "usr-guest",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "คุณอนันต์ พิริยพงศ์",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-custom",
+      "hotelName": "โตเกียว ซากุระ โรแมนติก 5 วัน 4 คืน (x1)",
+      "roomType": "Standard Room",
+      "checkIn": "",
+      "checkOut": "",
+      "nights": 1,
+      "guests": {
+        "adults": 1,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 41623,
+      "currency": "THB",
+      "paymentMethod": "พร้อมเพย์ QR Code (PromptPay)",
+      "paymentRef": "TX-147622",
+      "status": "CONFIRMED",
+      "source": "cart-checkout",
+      "createdAt": "2026-09-20T17:54:10.590Z"
+    },
+    {
+      "id": "BK-2026-9812",
+      "userId": "usr-01",
+      "userEmail": "anant.traveler@myprogram.com",
+      "customerName": "คุณอนันต์ พิริยพงศ์",
+      "contactPhone": "089-123-4567",
+      "hotelId": "h-phk-1",
+      "hotelName": "กีมาลา ภูเก็ต (Keemala Resort)",
+      "roomType": "Clay Pool Cottage",
+      "checkIn": "2026-04-10",
+      "checkOut": "2026-04-12",
+      "nights": 2,
+      "guests": {
+        "adults": 2,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 25600,
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "paymentRef": "PP-TX-892174",
+      "status": "CONFIRMED",
+      "source": "website",
+      "createdAt": "2026-03-02T14:40:00.000Z"
+    },
+    {
+      "id": "BK-2026-9813",
+      "userId": "usr-corp-01",
+      "userEmail": "corporate@globaltravel.co.th",
+      "customerName": "บจก. โกลบอล ทราเวล คอร์ปอเรชั่น",
+      "contactPhone": "02-999-8888",
+      "hotelId": "h-tok-1",
+      "hotelName": "Aman Tokyo (อามาน โตเกียว)",
+      "roomType": "Premier Room (วิวสวนพระราชวัง)",
+      "checkIn": "2026-04-15",
+      "checkOut": "2026-04-18",
+      "nights": 3,
+      "guests": {
+        "adults": 2,
+        "children": 0
+      },
+      "roomsCount": 1,
+      "totalPrice": 105000,
+      "currency": "THB",
+      "paymentMethod": "Corporate Billing",
+      "paymentRef": "CORP-TX-9912",
+      "status": "CONFIRMED",
+      "source": "ai_deep_booking",
+      "createdAt": "2026-03-06T11:30:00.000Z"
+    }
+  ],
+  "issues": [
+    {
+      "id": "ISSUE-1790268604345",
+      "userId": "usr-guest",
+      "userName": "คุณทดสอบระบบ",
+      "userEmail": "tester@example.com",
+      "category": "ทดสอบระบบความปลอดภัย",
+      "message": "ข้อความทดสอบการตรวจสอบระบบขั้นสุดท้าย",
+      "status": "RESOLVED",
+      "chatTranscript": [],
+      "adminReply": "เจ้าหน้าที่ได้ดำเนินการตรวจสอบและแก้ไขเรียบร้อยแล้ว",
+      "userNotified": false,
+      "createdAt": "2026-09-24T16:50:04.345Z",
+      "resolvedAt": "2026-09-24T16:50:04.355Z"
+    },
+    {
+      "id": "ISSUE-1790268076305",
+      "userId": "usr-01",
+      "userName": "วัชรเทพ",
+      "userEmail": "moodxang@gmail.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "ไม่สามารถเข้าเว็บได้",
+      "status": "PENDING",
+      "chatTranscript": [],
+      "adminReply": "",
+      "userNotified": false,
+      "createdAt": "2026-09-24T16:41:16.305Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1789957626229",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "moodxang@gmail.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "มีปัญาการชำระเงิน",
+      "status": "RESOLVED",
+      "chatTranscript": [],
+      "adminReply": "ตอนนี้ทางแอดมินได้จัดการปัญหาเรียบร้อยแล้วครับ",
+      "userNotified": false,
+      "createdAt": "2026-09-21T02:27:06.229Z",
+      "resolvedAt": "2026-09-21T02:31:19.350Z"
+    },
+    {
+      "id": "ISSUE-1789957382408",
+      "userId": "usr-guest",
+      "userName": "คุณวัชรเทพ รัตนไพศาล",
+      "userEmail": "ppiobanana@gmail.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "ทดสอบการส่งข้อความแจ้งปัญหา พร้อมตรวจสอบชื่อและการตอบกลับเข้าอีเมล",
+      "status": "RESOLVED",
+      "chatTranscript": [],
+      "adminReply": "สวัสดีครับคุณวัชรเทพ เจ้าหน้าที่ได้ตรวจสอบและดำเนินการแก้ไขให้เรียบร้อยแล้วครับ หากต้องการความช่วยเหลือเพิ่มเติมสามารถแจ้งได้ตลอด 24 ชม. ครับ",
+      "userNotified": false,
+      "createdAt": "2026-09-21T02:23:02.408Z",
+      "resolvedAt": "2026-09-21T02:23:02.469Z"
+    },
+    {
+      "id": "ISSUE-1789921714087",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "ไม่ดี",
+      "status": "PENDING",
+      "chatTranscript": [],
+      "adminReply": "",
+      "createdAt": "2026-09-20T16:28:34.087Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1789709891583",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "หน้าหี หีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีหีีหีหีหีหีหีหีหีหีหีหีหีีหีหีหีหีหีหีหีีี",
+      "status": "PENDING",
+      "chatTranscript": [],
+      "adminReply": "",
+      "createdAt": "2026-09-18T05:38:11.583Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1789709785768",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "ควยเว็บกากไอสัส",
+      "status": "RESOLVED",
+      "chatTranscript": [],
+      "adminReply": "ห",
+      "createdAt": "2026-09-18T05:36:25.768Z",
+      "resolvedAt": "2026-09-18T05:37:09.813Z",
+      "isTakenOver": false,
+      "takenOverBy": "เจ้าหน้าที่ฝ่ายบริการ (Admin Live)"
+    },
+    {
+      "id": "ISSUE-1789709657209",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "ช้ามากๆๆๆๆ",
+      "status": "RESOLVED",
+      "chatTranscript": [],
+      "adminReply": "ส",
+      "createdAt": "2026-09-18T05:34:17.209Z",
+      "resolvedAt": "2026-09-18T05:35:23.398Z",
+      "isTakenOver": false,
+      "takenOverBy": "เจ้าหน้าที่ฝ่ายบริการ (Admin Live)"
+    },
+    {
+      "id": "ISSUE-1789706085360",
+      "userId": "usr-admin-01",
+      "userName": "ผู้ดูแลระบบ (System Admin)",
+      "userEmail": "admin@myprogram.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "ควาย",
+      "status": "PENDING",
+      "chatTranscript": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "คิดว่าจะไปเชียงใหม่"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "ยินดีให้คำแนะนำครับ! คุณสามารถสอบถามเกี่ยวกับโรงแรม เที่ยวบิน ร้านอาหารมิชลิน หรือพิมพ์แจ้งรายละเอียดที่พักที่ต้องการจองให้ผมช่วยจัดทำรายการได้ตลอด 24 ชม. ครับ"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "ตั้งงบให้หน่อย"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "สำหรับการเดินทางแบบประหยัดคุ้มค่า แนะนำจัดสรรงบ: ที่พัก ~35%, อาหาร ~30%, กิจกรรม/เดินทาง ~25%, สำรอง ~10% และเลือกจองช่วงโปรโมชั่นแพ็กเกจ MY PROGRAM รับส่วนลดทันที 12% ครับ!"
+            }
+          ]
+        }
+      ],
+      "adminReply": "",
+      "createdAt": "2026-09-18T04:34:45.360Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1789696347837",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "madum@gmail.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "งงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงงง",
+      "status": "PENDING",
+      "chatTranscript": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "วิธีคำนวณงบเดินทาง"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "สำหรับการเดินทางแบบประหยัดคุ้มค่า แนะนำจัดสรรงบ: ที่พัก ~35%, อาหาร ~30%, กิจกรรม/เดินทาง ~25%, สำรอง ~10% และเลือกจองช่วงโปรโมชั่นแพ็กเกจ MY PROGRAM รับส่วนลดทันที 12% ครับ!"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "ทริปโตเกียว 3 วัน 2 คืน"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "โตเกียวเป็นจุดหมายยอดเยี่ยมครับ! แนะนำเที่ยว 3-5 วัน งบประมาณ 30,000 - 45,000 บาท/คน รวมโรงแรมย่านชินจูกุ/ชิบูย่า ตั๋ว Tokyo Subway Pass และตะลุยคาเฟ่ฮิต คุณสามารถคลิกไปที่เมนู **'AI ทริป'** เพื่อดูแผนรายวันและงบประมาณแบบละเอียดได้ทันทีครับ"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "แนะนำทริปงบประหยัด"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "text": "สำหรับการเดินทางแบบประหยัดคุ้มค่า แนะนำจัดสรรงบ: ที่พัก ~35%, อาหาร ~30%, กิจกรรม/เดินทาง ~25%, สำรอง ~10% และเลือกจองช่วงโปรโมชั่นแพ็กเกจ MY PROGRAM รับส่วนลดทันที 12% ครับ!"
+            }
+          ]
+        }
+      ],
+      "adminReply": "",
+      "createdAt": "2026-09-18T01:52:27.837Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1789665577602",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "ปัญหาการชำระเงิน/การจอง",
+      "message": "ไอบ้า",
+      "status": "PENDING",
+      "chatTranscript": [],
+      "adminReply": "",
+      "createdAt": "2026-09-17T17:19:37.602Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1789664861194",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "สอบถามแพ็กเกจท่องเที่ยว",
+      "message": "ไม่สามารถกดดำเนินการได้",
+      "status": "PENDING",
+      "chatTranscript": [],
+      "adminReply": "",
+      "createdAt": "2026-09-17T17:07:41.194Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1789664745280",
+      "userId": "usr-guest",
+      "userName": "????????? ?????????",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "????????????",
+      "message": "???????????????????????????????????????????? 1 ????????????? Keemala Phuket ????",
+      "status": "PENDING",
+      "chatTranscript": [
+        {
+          "text": "?????????? ????????????????? Keemala ??????????????????",
+          "role": "user"
+        },
+        {
+          "text": "?????? Keemala ???????????????????????????????? ??????????????????????????????? ????????????????????????????????????????????????????",
+          "role": "model"
+        }
+      ],
+      "adminReply": "",
+      "createdAt": "2026-09-17T17:05:45.280Z",
+      "resolvedAt": null
+    },
+    {
+      "id": "ISSUE-1001",
+      "userId": "usr-01",
+      "userName": "คุณอนันต์ พิริยพงศ์",
+      "userEmail": "anant.traveler@myprogram.com",
+      "category": "การจองที่พัก",
+      "message": "ต้องการขอเพิ่มเตียงเสริมสำหรับเด็ก 1 ท่าน ในการจอง Keemala Phuket ครับ",
+      "status": "PENDING",
+      "chatTranscript": [
+        {
+          "role": "user",
+          "text": "อยากจองโรงแรมที่ภูเก็ต 2 คืน"
+        },
+        {
+          "role": "model",
+          "text": "ยินดีครับ ขอทราบวันที่และจำนวนผู้เข้าพักเพิ่มเติมครับ"
+        },
+        {
+          "role": "user",
+          "text": "ขอเพิ่มเตียงเสริมสำหรับเด็กได้ไหมครับ"
+        }
+      ],
+      "adminReply": "",
+      "createdAt": "2026-03-10T09:30:00.000Z",
+      "resolvedAt": null
+    }
+  ],
+  "system": {
+    "activeModel": "gemini-2.5-flash",
+    "fallbackModel": "gemini-2.0-flash",
+    "version": "2.0.0"
+  },
+  "workspaces": [
+    {
+      "id": "ws-personal",
+      "name": "บัญชีส่วนตัว (Personal)",
+      "type": "personal",
+      "role": "owner",
+      "badgeColor": "sky",
+      "billingMethod": "Personal Travel Wallet",
+      "balance": 45000,
+      "membersCount": 1,
+      "description": "สำหรับจัดการทริปท่องเที่ยวส่วนตัวและครอบครัว"
+    },
+    {
+      "id": "ws-corp",
+      "name": "บจก. โกลบอล ทราเวล (Corporate VIP)",
+      "type": "corporate",
+      "role": "admin",
+      "badgeColor": "purple",
+      "billingMethod": "Corporate Monthly Invoicing",
+      "balance": 250000,
+      "membersCount": 14,
+      "taxId": "0105558912345",
+      "description": "เบิกจ่ายงบประมาณองค์กร ใบเสร็จกำกับภาษีเต็มรูป"
+    },
+    {
+      "id": "ws-family",
+      "name": "ครอบครัวพิริยพงศ์ (Family Workspace)",
+      "type": "family",
+      "role": "owner",
+      "badgeColor": "amber",
+      "billingMethod": "Family Shared Wallet",
+      "balance": 65000,
+      "membersCount": 4,
+      "description": "แชร์วอลเล็ทและจัดการตั๋วเครื่องบินสำหรับครอบครัว"
+    }
+  ],
+  "aiMetrics": {
+    "totalRequests": 42,
+    "successfulRequests": 42,
+    "rateLimit429Errors": 0,
+    "otherErrors": 0,
+    "avgLatencyMs": 1120,
+    "primaryModel": "gemini-2.5-flash",
+    "fallbackModel": "gemini-2.0-flash",
+    "recentLogs": [
+      {
+        "timestamp": "2026-09-17T17:33:19.255Z",
+        "model": "gemini-2.5-flash",
+        "status": 200,
+        "latencyMs": 980,
+        "action": "Deep Accommodation Booking Extraction"
+      },
+      {
+        "timestamp": "2026-09-17T17:28:19.255Z",
+        "model": "gemini-2.5-flash",
+        "status": 200,
+        "latencyMs": 1250,
+        "action": "Itinerary Planning"
+      }
+    ]
+  },
+  "systemSettings": {
+    "googleSheetsWebhookUrl": "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec"
+  },
+  "googleSheetsWebhookUrl": "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec"
+}
