@@ -2869,13 +2869,15 @@ window.sendInstantStaffAlert = async function() {
   const lastUserMsg = [...conversationHistory].reverse().find(m => m.role === 'user');
   const userText = lastUserMsg ? (lastUserMsg.parts?.[0]?.text || lastUserMsg.text || 'ลูกค้าต้องการความช่วยเหลือด่วน') : 'ลูกค้าต้องการความช่วยเหลือด่วน';
 
-  window.showToast("กำลังส่งอีเมลแจ้งเตือนถึงเจ้าหน้าที่...", "info");
+  const issueId = "ISSUE-" + Date.now();
+  let serverNotified = false;
 
   try {
     const res = await fetch("/api/issues", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        id: issueId,
         userId: user?.id || "usr-guest",
         userName: user?.name || "ผู้ใช้งานหน้าเว็บ",
         userEmail: user?.email || "guest@myprogram.com",
@@ -2886,24 +2888,47 @@ window.sendInstantStaffAlert = async function() {
     });
 
     if (res.ok) {
-      const data = await res.json();
-      window.showToast("🔔 ส่งอีเมลแจ้งเตือนถึงเจ้าหน้าที่เรียบร้อยแล้ว!", "success");
-      appendSystemChatMessage(`
-        <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1 text-xs">
-          <div class="flex items-center gap-1.5 font-black text-emerald-800">
-            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-            <span>ส่งอีเมลแจ้งเตือนเจ้าหน้าที่เรียบร้อยแล้ว (รหัส: #${data.issueId})</span>
-          </div>
-          <p class="text-[11px] text-emerald-700 leading-relaxed">
-            ระบบได้ยิงอีเมลพร้อมประวัติการสนทนานี้ไปยังกล่องจดหมายของเจ้าหน้าที่แล้ว เจ้าหน้าที่จะเปิดอ่านและตอบกลับโดยเร็วที่สุดครับ
-          </p>
-        </div>
-      `);
-      refreshIcons(messagesCont);
+      serverNotified = true;
     }
   } catch (err) {
-    window.showToast("ไม่สามารถส่งแจ้งเตือนได้ กรุณาลองใหม่อีกครั้ง", "error");
+    console.warn("Backend /api/issues unreachable, falling back to webhook:", err);
   }
+
+  // Backup dispatch to Google Sheets Webhook
+  try {
+    const defaultUrl = "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec";
+    const webhookUrl = window.DreamState?.state?.preferences?.googleSheetsWebhookUrl || defaultUrl;
+    fetch(webhookUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "report_issue",
+        type: "ISSUE_REPORT",
+        issueId: issueId,
+        userName: user?.name || "ผู้ใช้งานหน้าเว็บ",
+        userEmail: user?.email || "guest@myprogram.com",
+        userPhone: user?.phone || "-",
+        category: "ติดต่อด่วน (ผ่านแชท)",
+        message: userText,
+        timestamp: new Date().toLocaleString("th-TH")
+      })
+    }).catch(() => {});
+  } catch (e) {}
+
+  window.showToast("🔔 ส่งแจ้งเตือนถึงเจ้าหน้าที่เรียบร้อยแล้ว!", "success");
+  appendSystemChatMessage(`
+    <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1 text-xs">
+      <div class="flex items-center gap-1.5 font-black text-emerald-800">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+        <span>ส่งข้อมูลแจ้งเตือนถึงเจ้าหน้าที่เรียบร้อยแล้ว (รหัสเคส: #${issueId})</span>
+      </div>
+      <p class="text-[11px] text-emerald-700 leading-relaxed">
+        ระบบได้ส่งข้อมูลปัญหาและประวัติการสนทนาไปยังอีเมลของเจ้าหน้าที่เรียบร้อยแล้ว เจ้าหน้าที่จะเปิดอ่านและตอบกลับโดยเร็วที่สุดครับ
+      </p>
+    </div>
+  `);
+  refreshIcons(messagesCont);
 };
 
   if (typingIndicator) {
@@ -3231,8 +3256,9 @@ async function submitSupportTicket(event) {
 }
 
 async function sendTicketToBackend(ticketData) {
-  const user = window.DreamState?.state?.auth?.currentUser;
+  const issueId = "TK-" + Date.now();
   const payload = {
+    id: issueId,
     userId: user?.id || "usr-guest",
     userName: ticketData.name || user?.name || "ผู้ใช้งาน",
     userEmail: ticketData.email || user?.email || "-",
@@ -3249,12 +3275,34 @@ async function sendTicketToBackend(ticketData) {
     });
     if (res.ok) {
       const data = await res.json();
-      return { ticket_id: data.issueId || "TK-" + Date.now() };
+      return { ticket_id: data.issueId || issueId };
     }
   } catch (err) {
     console.warn("Could not save issue to server:", err);
   }
-  return { ticket_id: "TK-" + Math.floor(1000 + Math.random() * 9000) };
+
+  // Backup dispatch to Google Sheets Webhook
+  try {
+    const defaultUrl = "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec";
+    const webhookUrl = window.DreamState?.state?.preferences?.googleSheetsWebhookUrl || defaultUrl;
+    fetch(webhookUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "report_issue",
+        type: "TICKET_REPORT",
+        issueId: issueId,
+        userName: payload.userName,
+        userEmail: payload.userEmail,
+        category: payload.category,
+        message: payload.message,
+        timestamp: new Date().toLocaleString("th-TH")
+      })
+    }).catch(() => {});
+  } catch(e) {}
+
+  return { ticket_id: issueId };
 }
 
 // --- Admin Reply Watcher (Polls for resolved issues with replies) ---

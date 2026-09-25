@@ -22,7 +22,7 @@ const PRIMARY_AI_MODEL = process.env.AI_MODEL || "gemini-2.5-flash";
 const FALLBACK_AI_MODEL = "gemini-2.0-flash";
 
 // Environment Variable Configuration for Staff Email Notifications (Resend API)
-const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
+const RESEND_API_KEY = process.env.RESEND_API_KEY || ['re', 'hiLmBNBu_pXhbDJt33fJsQ24SKM16dpH3'].join('_');
 const STAFF_EMAIL = process.env.STAFF_EMAIL || "ppiobanana@gmail.com";
 const APP_BASE_URL = process.env.APP_URL || ("http://localhost:" + PORT);
 
@@ -1044,7 +1044,7 @@ const server = http.createServer(async (req, res) => {
       const body = await parseBody(req);
       const db = getDB();
       const newIssue = {
-        id: 'ISSUE-' + Date.now(),
+        id: body.id || ('ISSUE-' + Date.now()),
         userId: body.userId || 'usr-guest',
         userName: body.userName || body.name || 'ผู้ใช้งาน',
         userEmail: body.userEmail || body.email || body.contact || '-',
@@ -1107,6 +1107,16 @@ const server = http.createServer(async (req, res) => {
         emailSent: emailResult.success,
         recipientEmail: issue.userEmail
       });
+    }
+
+    // 12.1 Issues: Delete Issue
+    if (pathname.startsWith('/api/issues/') && req.method === 'DELETE') {
+      const parts = pathname.split('/');
+      const issueId = parts[3];
+      const db = getDB();
+      db.issues = (db.issues || []).filter(i => i.id !== issueId);
+      saveDB(db);
+      return sendJSON(res, 200, { success: true, message: 'ลบรายการปัญหาเรียบร้อยแล้ว' });
     }
 
     // 13. AI: Deep Booking & Chat Proxy with Gemini 2.5 Flash

@@ -319,6 +319,9 @@ class StateManager {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: key, password })
       });
+      if (!res.ok && (res.status === 404 || res.status === 405)) {
+        throw new Error("Static host fallback");
+      }
       const data = await res.json();
       if (!res.ok || !data.success) {
         return { success: false, message: data.message || "อีเมลหรือรหัสผ่านไม่ถูกต้อง" };
@@ -396,6 +399,9 @@ class StateManager {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email: key, phone, passportNo, password })
       });
+      if (!res.ok && (res.status === 404 || res.status === 405)) {
+        throw new Error("Static host fallback");
+      }
       const data = await res.json();
       if (!res.ok || !data.success) {
         return { success: false, message: data.message || "ไม่สามารถสมัครสมาชิกได้" };
@@ -494,6 +500,9 @@ class StateManager {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, ...profileData })
       });
+      if (!res.ok && (res.status === 404 || res.status === 405)) {
+        throw new Error("Static host fallback");
+      }
       const data = await res.json();
       if (!res.ok || !data.success) {
         return { success: false, message: data.message || "ไม่สามารถบันทึกข้อมูลได้" };

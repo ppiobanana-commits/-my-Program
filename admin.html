@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจัดการหลังบ้าน (Admin Operations Dashboard) | MY PROGRAM</title>
+  <meta name="description" content="ระบบจัดการหลังบ้าน ตรวจสอบรายการจอง บริหารจัดการสมาชิก และดูแลตอบกลับข้อความแจ้งปัญหาของลูกค้า">
   <!-- Preconnect External CDNs for Fast TTFB -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -192,10 +194,10 @@
             <option value="PENDING">รอดำเนินการ (PENDING)</option>
             <option value="CANCELLED">ยกเลิก (CANCELLED)</option>
           </select>
-          <a href="/api/bookings/export-csv" download="myprogram-bookings.csv" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer flex-shrink-0 shadow-xs" title="ดาวน์โหลดไฟล์ CSV สำหรับ Excel / Google Sheets">
+          <button type="button" onclick="exportBookingsToCSV()" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer flex-shrink-0 shadow-xs" title="ดาวน์โหลดไฟล์ CSV สำหรับ Excel / Google Sheets">
             <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
             <span>ส่งออก CSV</span>
-          </a>
+          </button>
           <button type="button" onclick="syncAllToGoogleSheets()" id="btn-admin-sync-sheets" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs flex-shrink-0" title="ส่งข้อมูลการจองทั้งหมดเข้า Google Sheets ทันที">
             <i data-lucide="refresh-cw" id="sync-sheets-icon" class="w-3.5 h-3.5"></i>
             <span>ซิงค์ชีต</span>
@@ -454,29 +456,91 @@
       if (icon) icon.classList.add("animate-spin");
 
       try {
-        const [resBk, resUsr, resIss] = await Promise.all([
-          fetch("/api/bookings"),
-          fetch("/api/users"),
-          fetch("/api/issues")
-        ]);
+        let loadedFromApi = false;
+        try {
+          const [resBk, resUsr, resIss] = await Promise.all([
+            fetch("/api/bookings"),
+            fetch("/api/users"),
+            fetch("/api/issues")
+          ]);
 
-        if (resBk.ok) {
-          const data = await resBk.json();
-          allBookings = data.bookings || [];
-          renderBookingsTable(allBookings);
-        }
-        if (resUsr.ok) {
-          const data = await resUsr.json();
-          allUsers = data.users || [];
-          renderUsersTable(allUsers);
-        }
-        if (resIss.ok) {
-          const data = await resIss.json();
-          allIssues = data.issues || [];
-          const isTypingReply = document.activeElement && document.activeElement.id && document.activeElement.id.startsWith("reply-input-");
-          if (!isTypingReply || isManual) {
-            renderIssuesList(allIssues);
+          if (resBk.ok) {
+            const data = await resBk.json();
+            allBookings = data.bookings || [];
+            loadedFromApi = true;
           }
+          if (resUsr.ok) {
+            const data = await resUsr.json();
+            allUsers = data.users || [];
+          }
+          if (resIss.ok) {
+            const data = await resIss.json();
+            allIssues = data.issues || [];
+          }
+        } catch(apiErr) {
+          console.warn("REST API not available, trying static file fallback...", apiErr);
+        }
+
+        // Static host (GitHub Pages) fallback via data/db.json & localStorage
+        if (!loadedFromApi) {
+          try {
+            const staticRes = await fetch("data/db.json");
+            if (staticRes.ok) {
+              const staticData = await staticRes.json();
+              allBookings = staticData.bookings || [];
+              allUsers = Object.values(staticData.users || {});
+              allIssues = staticData.issues || [];
+            }
+          } catch(e) {}
+
+          try {
+            const localRaw = localStorage.getItem("dream_state");
+            if (localRaw) {
+              const localState = JSON.parse(localRaw);
+              if (localState.bookings && localState.bookings.length) {
+                const ids = new Set(allBookings.map(b => b.id));
+                localState.bookings.forEach(b => {
+                  if (!ids.has(b.id)) allBookings.unshift(b);
+                });
+              }
+              if (localState.users) {
+                const existingEmails = new Set(allUsers.map(u => (u.email||'').toLowerCase()));
+                Object.values(localState.users).forEach(u => {
+                  if (u.email && !existingEmails.has(u.email.toLowerCase())) {
+                    allUsers.push(u);
+                  }
+                });
+              }
+            }
+          } catch(e) {}
+
+          // Also merge locally saved issues
+          try {
+            const localIssuesRaw = localStorage.getItem("myprogram_local_issues");
+            if (localIssuesRaw) {
+              const localIssues = JSON.parse(localIssuesRaw);
+              if (Array.isArray(localIssues) && localIssues.length > 0) {
+                const issueIds = new Set(allIssues.map(i => i.id));
+                localIssues.forEach(iss => {
+                  if (!issueIds.has(iss.id)) {
+                    allIssues.unshift(iss);
+                  } else {
+                    const idx = allIssues.findIndex(i => i.id === iss.id);
+                    if (idx !== -1 && iss.status === 'RESOLVED') {
+                      allIssues[idx] = iss;
+                    }
+                  }
+                });
+              }
+            }
+          } catch(e) {}
+        }
+
+        renderBookingsTable(allBookings);
+        renderUsersTable(allUsers);
+        const isTypingReply = document.activeElement && document.activeElement.id && document.activeElement.id.startsWith("reply-input-");
+        if (!isTypingReply || isManual) {
+          renderIssuesList(allIssues);
         }
 
         updateKPISummaries();
@@ -871,6 +935,9 @@
                   <i data-lucide="mail-plus" class="w-3.5 h-3.5 text-red-600"></i>
                   <span>ส่งผ่าน Gmail</span>
                 </a>
+                <button type="button" onclick="deleteIssue('${iss.id}')" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-400 font-bold text-[11px] transition flex items-center gap-1 cursor-pointer" title="ลบรายการปัญหานี้">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
               </div>
             </div>
 
@@ -1045,33 +1112,111 @@
         btn.innerHTML = `<span class="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span> <span>กำลังส่งอีเมล...</span>`;
       }
 
+      let emailSent = false;
+      let targetEmail = '';
+
+      // 1. Try Backend REST API first
       try {
         const res = await fetch(`/api/issues/${issueId}/reply`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ reply, status: "RESOLVED" })
         });
-        const data = await res.json();
         if (res.ok) {
-          if (window.draftReplies) delete window.draftReplies[issueId];
-          const emailTarget = data.recipientEmail || '';
-          if (data.emailSent) {
-            showToast(`ตอบกลับสำเร็จ & ส่งอีเมลแจ้งลูกค้าที่ ${emailTarget} เรียบร้อยแล้ว!`);
-          } else {
-            showToast(`ตอบกลับและปิดเคส #${issueId} สำเร็จเรียบร้อยแล้ว!`);
-          }
-          fetchAdminData(true);
-        } else {
-          showToast(data.message || "เกิดข้อผิดพลาดในการตอบกลับ", false);
+          const data = await res.json();
+          emailSent = Boolean(data.emailSent);
+          targetEmail = data.recipientEmail || '';
         }
       } catch (err) {
-        showToast("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์", false);
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = `<i data-lucide="send" class="w-3.5 h-3.5"></i> <span>ตอบกลับ & ส่งอีเมล</span>`;
-        }
+        console.warn("Backend reply API offline, applying local resolution:", err);
       }
+
+      // 2. Update issue in memory and localStorage
+      const issue = allIssues.find(i => i.id === issueId);
+      if (issue) {
+        issue.adminReply = reply;
+        issue.status = 'RESOLVED';
+        issue.resolvedAt = new Date().toISOString();
+        targetEmail = targetEmail || issue.userEmail || '';
+      }
+
+      // Save to localStorage so state persists
+      try {
+        localStorage.setItem("myprogram_local_issues", JSON.stringify(allIssues));
+      } catch(e) {}
+
+      // 3. Dispatch to Google Sheets Webhook as backup
+      try {
+        const defaultUrl = "https://script.google.com/macros/s/AKfycbxko-aJKu6ACCbeSsL12v9koe0KshBd5fa_fEE1orsFG4aS8ugPUFwMTDvvZ4rjax2g/exec";
+        const webhookUrl = window.DreamState?.state?.preferences?.googleSheetsWebhookUrl || defaultUrl;
+        fetch(webhookUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "resolve_issue",
+            issueId: issueId,
+            adminReply: reply,
+            status: "RESOLVED",
+            customerEmail: targetEmail,
+            resolvedAt: new Date().toLocaleString("th-TH")
+          })
+        }).catch(() => {});
+      } catch(e) {}
+
+      if (window.draftReplies) delete window.draftReplies[issueId];
+
+      if (emailSent) {
+        showToast(`✅ ตอบกลับสำเร็จ & ส่งอีเมลแจ้งลูกค้าที่ ${targetEmail} เรียบร้อยแล้ว!`);
+      } else {
+        showToast(`✅ บันทึกข้อความตอบกลับและปิดเคส #${issueId} สำเร็จเรียบร้อย!`);
+      }
+
+      renderIssuesList(allIssues);
+      updateKPISummaries();
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="send" class="w-3.5 h-3.5"></i> <span>ตอบกลับ & ส่งอีเมล</span>`;
+      }
+    }
+
+    async function deleteIssue(issueId) {
+      if (!confirm(`ต้องการลบรายการปัญหา #${issueId} นี้ใช่หรือไม่?`)) return;
+      try {
+        await fetch(`/api/issues/${issueId}`, { method: "DELETE" });
+      } catch(e) {}
+
+      allIssues = allIssues.filter(i => i.id !== issueId);
+      try {
+        localStorage.setItem("myprogram_local_issues", JSON.stringify(allIssues));
+      } catch(e) {}
+
+      showToast(`ลบรายการปัญหา #${issueId} เรียบร้อยแล้ว`);
+      renderIssuesList(allIssues);
+      updateKPISummaries();
+    }
+
+    function exportBookingsToCSV() {
+      const list = allBookings || [];
+      if (!list.length) {
+        showToast("ไม่มีข้อมูลการจองสำหรับส่งออก CSV", false);
+        return;
+      }
+      let csv = "\uFEFFรหัสการจอง,ชื่อลูกค้า,เบอร์โทรศัพท์,อีเมล,โรงแรม/บริการ,ห้องพัก,เช็คอิน,เช็คเอาท์,จำนวนคืน,ยอดรวม(บาท),วิธีชำระ,สถานะ,วันที่จอง\n";
+      list.forEach(b => {
+        csv += `"${b.id || ''}","${(b.customerName || '').replace(/"/g, '""')}","${b.contactPhone || ''}","${b.userEmail || ''}","${(b.hotelName || '').replace(/"/g, '""')}","${(b.roomType || '').replace(/"/g, '""')}","${b.checkIn || ''}","${b.checkOut || ''}","${b.nights || 1}","${b.totalPrice || 0}","${b.paymentMethod || ''}","${b.status || ''}","${b.createdAt || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `myprogram-bookings-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("ดาวน์โหลดไฟล์ CSV เรียบร้อยแล้ว");
     }
 
     // Auto-refresh every 5 seconds for Real-time Monitoring
